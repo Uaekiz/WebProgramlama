@@ -5,3 +5,7 @@
 # User-specific files
 *.user
 *.suo
+
+# SQLite database files
+*.db
+*.db-journal
