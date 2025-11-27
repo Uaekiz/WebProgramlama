@@ -10,5 +10,6 @@ public class User
     public bool gender { get; set; }
     public string password { get; set; }
     public int age {get; set;}
+    //deneme
 
 }
