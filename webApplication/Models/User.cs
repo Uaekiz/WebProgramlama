@@ -9,5 +9,6 @@ public class User
     public string? email { get; set; }
     public bool? gender { get; set; }
     public string? password { get; set; }
+    //deneme
 
 }
