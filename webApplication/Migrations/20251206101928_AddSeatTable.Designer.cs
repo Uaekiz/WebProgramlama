@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webApplication.Data;
 
@@ -10,9 +11,11 @@ using webApplication.Data;
 namespace webApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206101928_AddSeatTable")]
+    partial class AddSeatTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -69,32 +72,6 @@ namespace webApplication.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Halls");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("SeatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SeatId");
-
-                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("webApplication.Models.Seat", b =>
@@ -184,17 +161,6 @@ namespace webApplication.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("webApplication.Models.Reservation", b =>
-                {
-                    b.HasOne("webApplication.Models.Seat", "Seat")
-                        .WithMany("Reservations")
-                        .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Seat");
-                });
-
             modelBuilder.Entity("webApplication.Models.Seat", b =>
                 {
                     b.HasOne("webApplication.Models.Hall", "Hall")
@@ -209,11 +175,6 @@ namespace webApplication.Migrations
             modelBuilder.Entity("webApplication.Models.Hall", b =>
                 {
                     b.Navigation("Seats");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Seat", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
