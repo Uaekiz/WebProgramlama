@@ -1,0 +1,156 @@
+@model IEnumerable<webApplication.Models.Hall>
+
+<style>
+    /* Başlık Modernizasyon */
+    .page-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .page-title::after {
+        content: "";
+        width: 80px;
+        height: 4px;
+        background: #0d6efd;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 5px;
+    }
+
+    /* Kartlar */
+    .hall-container {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+        padding-bottom: 50px;
+    }
+
+    .hall-card {
+        width: 260px;
+        padding: 22px;
+        border-radius: 18px;
+        background: #ffffff;
+        border-top: 6px solid #0d6efd;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hall-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    /* Emoji ikon daha büyük ve parlak */
+    .hall-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 0 5px rgba(13, 110, 253, 0.35));
+    }
+
+    .hall-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .hall-description p {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.35;
+        height: 58px;
+        /* Kart boyutu eşitlensin diye */
+        margin-bottom: 8px;
+    }
+
+    .hall-info {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .select-btn {
+        margin-top: 5px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        width: 140px;
+    }
+
+    .library-hero {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 25px;
+        padding: 20px;
+    }
+
+    .library-hero h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .library-hero p {
+        font-size: 18px;
+        color: #555;
+        margin-top: 10px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="library-hero">
+
+    <p>
+       Kütüphanemiz 7/24 açık olup; PC Salonu,
+        Çalışma Salonu ve Okuma Salonu ile öğrencilere
+        konforlu ve verimli çalışma alanları sunmaktadır.
+
+       
+
+    </p>
+</div>
+
+<h2 class="page-title">Lütfen bir salon seçin</h2>
+
+<div class="hall-container">
+
+    @foreach (var hall in Model)
+    {
+        string icon = hall.Type switch
+        {
+            "Computer" => "💻",
+            "Study" => "📚",
+            "Library" => "📖",
+            _ => "🏛️"
+        };
+
+        <div class="hall-card">
+            <div class="hall-icon">@icon</div>
+
+            <div class="hall-title">@hall.Name</div>
+
+            <div class="hall-description">
+                <p>@hall.Description</p>
+            </div>
+
+
+            <div class="hall-info">Koltuk sayısı: <strong>@hall.SeatCount</strong></div>
+
+            <a class="btn btn-primary select-btn" href="/Hall/Details/@hall.Id">
+                Seçiniz
+            </a>
+        </div>
+    }
+
+</div>
