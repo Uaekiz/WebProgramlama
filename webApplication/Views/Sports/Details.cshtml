@@ -1,0 +1,51 @@
+@model webApplication.Models.Sport
+
+@{
+    ViewData["Title"] = @Model.Name + " Detayları";
+}
+
+<h1>@Model.Name</h1>
+<hr />
+
+@if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <div class="mb-4">
+        <img src="@Model.ImageUrl" alt="@Model.Name Görseli" class="img-fluid rounded shadow-sm" style="max-height: 400px; width: 100%; object-fit: cover;">
+    </div>
+}
+<div>
+    <h4>Spor Faaliyeti Tanıtımı ve Detayları (1. Kat)</h4>
+    <dl class="row">
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.info)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.info)</dd> 
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DaysOffered)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DaysOffered)</dd>
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Capacity)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Capacity)</dd>
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Date)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Date)</dd>
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Location)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Location)</dd>
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Trainer)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Trainer)</dd>
+        
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Age_Limit)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Age_Limit)</dd>
+        
+    </dl>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
+    
+    <a asp-action="Form" asp-route-id="@Model.Id" class="btn btn-success float-end">Bu Spora Kaydol</a>
+</div>

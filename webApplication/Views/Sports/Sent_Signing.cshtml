@@ -1,0 +1,15 @@
+@{
+    ViewData["Title"] = "Kayıt Onayı";
+}
+
+<div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Kayıt Başarılı! </h4>
+    <p>Spor faaliyeti başvurunuz başarıyla alınmıştır. İlgili kayıt detayları ve onay süreçleri e-posta adresinize gönderilecektir.</p>
+    <hr>
+    <p class="mb-0">Size uygun spor saatleri ve antrenör bilgileri için lütfen sistemdeki bildirimlerinizi takip edin.</p>
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-info">Ana Sayfaya Geri Dön</a>
+    <a asp-action="Listing" class="btn btn-outline-secondary">Tüm Spor Faaliyetlerini Görüntüle</a>
+</div>

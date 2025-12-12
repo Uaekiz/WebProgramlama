@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using webApplication.Data;
 
@@ -10,9 +11,11 @@ using webApplication.Data;
 namespace webApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251211134809_AddInfonToCoursesAndSports")]
+    partial class AddInfonToCoursesAndSports
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -37,9 +40,6 @@ namespace webApplication.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Location")
                         .HasColumnType("TEXT");
 
@@ -55,80 +55,6 @@ namespace webApplication.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Hall", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("SeatCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Halls");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Reservation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("SeatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SeatId");
-
-                    b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Seat", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("HallId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SeatNumber")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HallId");
-
-                    b.ToTable("Seats");
                 });
 
             modelBuilder.Entity("webApplication.Models.CourseRegistration", b =>
@@ -180,9 +106,6 @@ namespace webApplication.Migrations
 
                     b.Property<string>("DaysOffered")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Location")
@@ -263,38 +186,6 @@ namespace webApplication.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Reservation", b =>
-                {
-                    b.HasOne("webApplication.Models.Seat", "Seat")
-                        .WithMany("Reservations")
-                        .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Seat");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Seat", b =>
-                {
-                    b.HasOne("webApplication.Models.Hall", "Hall")
-                        .WithMany("Seats")
-                        .HasForeignKey("HallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hall");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Hall", b =>
-                {
-                    b.Navigation("Seats");
-                });
-
-            modelBuilder.Entity("webApplication.Models.Seat", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("webApplication.Models.CourseRegistration", b =>
