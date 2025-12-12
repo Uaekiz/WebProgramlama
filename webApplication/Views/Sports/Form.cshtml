@@ -1,0 +1,86 @@
+@model webApplication.Models.SportRegistration // Artık Kayıt modelini kullanıyoruz
+@inject webApplication.Data.ApplicationDbContext Context // DbContext'i View'a enjekte ediyoruz
+
+@{
+    ViewData["Title"] = "Spor Başvuru Formu";
+    
+    // 1. Kaydolunacak Sporun ID'sini RouteData'dan al. Controller'dan da gelmiş olabilir.
+    int sportId = Model.SportId > 0 ? Model.SportId : int.Parse(ViewContext.RouteData.Values["id"]?.ToString() ?? "0");
+    
+    // Modelin SportId'si boş gelirse, route'dan aldığımız değeri ata.
+    if (Model.SportId == 0) Model.SportId = sportId;
+
+    // 2. O Sporun detaylarını (DaysOffered) veritabanından çek.
+    var sportDetails = Context.Sports.FirstOrDefault(s => s.Id == sportId);
+
+    // Eğer detaylar yoksa veya gün bilgisi eksikse hata mesajı
+    if (sportDetails == null)
+    {
+        ViewData["ErrorMessage"] = "Kayıt formu geçersiz. Lütfen listeden spor seçimi yapın.";
+    }
+    
+    // Günleri ayır (Örn: "Pazartesi,Çarşamba" -> ["Pazartesi", "Çarşamba"])
+    var availableDays = sportDetails?.DaysOffered?.Split(',')
+        .Select(d => d.Trim())
+        .Where(d => !string.IsNullOrWhiteSpace(d)) // Boş girişleri temizle
+        .ToList() ?? new List<string>();
+}
+
+<h1>Spor Faaliyeti Kaydı: @(sportDetails?.Name ?? "Bilinmiyor")</h1>
+<hr />
+
+@* Controller'dan gelen tüm hataları (ModelState.AddModelError) burada gösteriyoruz *@
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                
+<input type="hidden" asp-for="SportId" />
+                <div class="form-group mb-3">
+                    <label asp-for="ApplicantName" class="control-label">Adınız Soyadınız (Zorunlu)</label>
+                    <input asp-for="ApplicantName" class="form-control" />
+                    <span asp-validation-for="ApplicantName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="SelectedDay" class="control-label">Tercih Edilen Ders Günü (Zorunlu)</label>
+                    
+                    @if (availableDays.Any())
+                    {
+                        @foreach (var day in availableDays)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="SelectedDay" value="@day" id="day_@day">
+                                <label class="form-check-label" for="day_@day">@day</label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-warning">Bu spor için ders günü bilgisi bulunamadı. Lütfen yöneticinizle iletişime geçin.</p>
+                    }
+                    <span asp-validation-for="SelectedDay" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Kaydı Tamamla" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<div class="mt-3">
+   <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
