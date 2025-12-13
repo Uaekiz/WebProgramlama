@@ -3,6 +3,7 @@ using webApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using webApplication.Models;
 
+
 namespace webApplication.Controllers
 {
     public class HallController : Controller

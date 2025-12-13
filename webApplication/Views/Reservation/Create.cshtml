@@ -31,15 +31,7 @@
         <input class="form-control" value="@ViewBag.SelectedEnd" readonly />
     </div>
 
-    <!-- Kullanıcının dolduracağı tek alan -->
-    <div class="form-group mb-3">
-        <label asp-for="UserName">Ad Soyad</label>
-        <input asp-for="UserName" class="form-control" placeholder="Adınızı giriniz" />
-        <span asp-validation-for="UserName" class="text-danger"></span>
-    </div>
-
     <button class="btn btn-primary">Rezerve et</button>
-
 
     <a asp-controller="Hall" asp-action="Index" class="btn btn-secondary">İptal et</a>
 

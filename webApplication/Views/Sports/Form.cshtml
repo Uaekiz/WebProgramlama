@@ -3,10 +3,10 @@
 
 @{
     ViewData["Title"] = "Spor Başvuru Formu";
-    
+
     // 1. Kaydolunacak Sporun ID'sini RouteData'dan al. Controller'dan da gelmiş olabilir.
     int sportId = Model.SportId > 0 ? Model.SportId : int.Parse(ViewContext.RouteData.Values["id"]?.ToString() ?? "0");
-    
+
     // Modelin SportId'si boş gelirse, route'dan aldığımız değeri ata.
     if (Model.SportId == 0) Model.SportId = sportId;
 
@@ -18,12 +18,12 @@
     {
         ViewData["ErrorMessage"] = "Kayıt formu geçersiz. Lütfen listeden spor seçimi yapın.";
     }
-    
+
     // Günleri ayır (Örn: "Pazartesi,Çarşamba" -> ["Pazartesi", "Çarşamba"])
     var availableDays = sportDetails?.DaysOffered?.Split(',')
-        .Select(d => d.Trim())
-        .Where(d => !string.IsNullOrWhiteSpace(d)) // Boş girişleri temizle
-        .ToList() ?? new List<string>();
+    .Select(d => d.Trim())
+    .Where(d => !string.IsNullOrWhiteSpace(d)) // Boş girişleri temizle
+    .ToList() ?? new List<string>();
 }
 
 <h1>Spor Faaliyeti Kaydı: @(sportDetails?.Name ?? "Bilinmiyor")</h1>
@@ -41,17 +41,13 @@ else
     <div class="row">
         <div class="col-md-6">
             <form asp-action="Create">
-                
-<input type="hidden" asp-for="SportId" />
-                <div class="form-group mb-3">
-                    <label asp-for="ApplicantName" class="control-label">Adınız Soyadınız (Zorunlu)</label>
-                    <input asp-for="ApplicantName" class="form-control" />
-                    <span asp-validation-for="ApplicantName" class="text-danger"></span>
-                </div>
+
+                <input type="hidden" asp-for="SportId" />
+
 
                 <div class="form-group mb-4">
                     <label asp-for="SelectedDay" class="control-label">Tercih Edilen Ders Günü (Zorunlu)</label>
-                    
+
                     @if (availableDays.Any())
                     {
                         @foreach (var day in availableDays)
@@ -64,11 +60,12 @@ else
                     }
                     else
                     {
-                        <p class="text-warning">Bu spor için ders günü bilgisi bulunamadı. Lütfen yöneticinizle iletişime geçin.</p>
+                        <p class="text-warning">Bu spor için ders günü bilgisi bulunamadı. Lütfen yöneticinizle iletişime geçin.
+                        </p>
                     }
                     <span asp-validation-for="SelectedDay" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-group">
                     <input type="submit" value="Kaydı Tamamla" class="btn btn-success" />
                 </div>
@@ -78,9 +75,11 @@ else
 }
 
 <div class="mt-3">
-   <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
+    <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
