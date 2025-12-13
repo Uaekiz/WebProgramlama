@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using webApplication.Data;
 using webApplication.Models;
 using System.Security.Claims;
+using webApplication.Filters;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace webApplication.Controllers
 {
+     [NoCache]
     public class SportsController : Controller
     {
 
@@ -44,6 +46,19 @@ namespace webApplication.Controllers
             {
                 return NotFound();
             }
+            bool isUserRegistered = false;
+    
+    // Kullanıcının giriş yapıp yapmadığını kontrol ediyoruz
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                isUserRegistered = await _context.SportRegistrations
+                .AnyAsync(r => r.SportId == sport.Id && r.UserId == currentUserId);
+            }
+
+            // Sonucu View'a iletiyoruz
+            ViewBag.IsUserRegistered = isUserRegistered;
             return View(sport);
         }
 
@@ -53,6 +68,7 @@ namespace webApplication.Controllers
 
         // GET: /Sports/Form/{id} -> Detay sayfasından gelen Sport ID'sini yakalar
         [Authorize]
+        [NoCache]
         public IActionResult Form(int? id)
         {
             if (id == null || id == 0)
