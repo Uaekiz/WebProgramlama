@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webApplication.Data;
 using webApplication.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +12,7 @@ namespace webApplication.Controllers
 {
     public class CoursesController : Controller
     {
-        
+
         private readonly ApplicationDbContext _context;
 
         public CoursesController(ApplicationDbContext context)
@@ -44,79 +46,81 @@ namespace webApplication.Controllers
 
             return View(course);
         }
-        
+
         // ----------------------------------------------------
         // KAYIT FORMU (GET) - KURS ID'SİNİ ALACAK ŞEKİLDE GÜNCELLENDİ
         // ----------------------------------------------------
         // CoursesController.cs
-// ...
+        // ...
         // GET: /Courses/Form/{id} -> Detay sayfasından gelen Course ID'sini yakalar
+        [Authorize]
         public IActionResult Form(int? id)
         {
             if (id == null || id == 0)
             {
-                return RedirectToAction(nameof(Listing)); 
+                return RedirectToAction(nameof(Listing));
             }
-            
+
             // View'a, CourseRegistration modelini gönderirken CourseId'yi içine yerleştiriyoruz.
             var registration = new CourseRegistration { CourseId = id.Value };
-            
+
             return View(registration);
         }
-// ...
+        // ...
         // ----------------------------------------------------
         // KAYIT OLUŞTURMA (CREATE) - KONTENJAN KONTROLÜ EKLENDİ
         // ----------------------------------------------------
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        // Artık Course modeli değil, CourseRegistration modeli bekleniyor
-        public async Task<IActionResult> Create([Bind("CourseId,ApplicantName,SelectedDay")] CourseRegistration registration)
+        // Bind kısmından "ApplicantName"i çıkardım
+        public async Task<IActionResult> Create([Bind("CourseId,SelectedDay")] CourseRegistration registration)
         {
-            // ModelState.IsValid kontrolü, sadece C# modelindeki zorunlu alanların (Required)
-            // doldurulup doldurulmadığını kontrol eder.
+            // Giriş yapan kullanıcının ID'sini ata
+            registration.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // UserId boş ise (Kullanıcı giriş yapmamışsa) Login'e gönder
+            if (string.IsNullOrEmpty(registration.UserId))
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
+            // ModelState kontrolünü yaparken "ApplicantName" hatasını temizle (Çünkü artık modelde o yok ama eski cache kalmış olabilir)
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
             if (ModelState.IsValid)
             {
-                // 1. KONTENJAN KONTROLÜ (KRİTİK)
-                
-                // Bu Kursun (CourseId) toplam kontenjanını alıyoruz.
+                // 1. KONTENJAN KONTROLÜ
                 var courseDetails = await _context.Courses
-                    .AsNoTracking() // Veritabanından hızlı okuma
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.Id == registration.CourseId);
 
                 if (courseDetails == null)
                 {
                     ModelState.AddModelError("", "Hata: Kayıt yapılmaya çalışılan kurs bulunamadı.");
-                    return View("Form", registration); 
+                    return View("Form", registration);
                 }
 
-                // Bu Kursa daha önce yapılan mevcut kayıt sayısını say.
                 var currentRegistrations = await _context.CourseRegistrations
                     .CountAsync(r => r.CourseId == registration.CourseId);
 
-                // Kontenjanı Karşılaştır
                 if (currentRegistrations >= courseDetails.Capacity)
                 {
-                    // Kontenjan doluysa, kullanıcıya hata mesajı gösterilir.
                     ModelState.AddModelError("", $"Üzgünüz, '{courseDetails.Name}' kontenjanı ({courseDetails.Capacity}) dolmuştur.");
-                    // Formu doldurulan bilgilerle (hata mesajı ile) geri yolla.
-                    return View("Form", registration); 
+                    return View("Form", registration);
                 }
 
                 // 2. KAYIT İŞLEMİ
-                
                 registration.RegistrationDate = DateTime.Now;
-                registration.Status = "Onay Bekliyor"; 
-                
-                _context.Add(registration); // Yeni kaydı bağlama ekle
-                await _context.SaveChangesAsync(); // Veritabanına kaydet
-                
-                // Başarılı kayıttan sonra onay sayfasına yönlendir.
-                return RedirectToAction(nameof(Sent_Signing)); 
+                registration.Status = "Onay Bekliyor";
+
+                _context.Add(registration);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Sent_Signing));
             }
-            
-            // Model doğrulaması (ApplicantName veya SelectedDay) başarısız olursa formu geri yolla.
+
             return View("Form", registration);
         }
 

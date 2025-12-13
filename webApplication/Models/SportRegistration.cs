@@ -8,8 +8,12 @@ namespace webApplication.Models
         public int Id { get; set; } 
         public int SportId { get; set; } 
         public Sport? Sport { get; set; } 
-        [Required(ErrorMessage = "Adınız ve soyadınız zorunludur.")]
-        public string ApplicantName { get; set; } 
+
+        public string UserId { get; set; } 
+
+        [ForeignKey("UserId")]
+        public User User { get; set; } 
+
         [Required(ErrorMessage = "Lütfen ders gününü seçiniz.")]
         public string SelectedDay { get; set; } 
         public DateTime RegistrationDate { get; set; } = DateTime.Now;

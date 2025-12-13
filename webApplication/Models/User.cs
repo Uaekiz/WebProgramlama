@@ -1,15 +1,10 @@
 namespace webApplication.Models;
+using Microsoft.AspNetCore.Identity;
 
-public class User
+public class User : IdentityUser
 {
-    public string id { get; set; }
-    public string? name { get; set; }
-    public string? surname { get; set; }
-    public string? phoneNumber { get; set; }
-    public string? email { get; set; }
-    public bool gender { get; set; }
-    public string password { get; set; }
-    public int age {get; set;}
-    //deneme
-
+    public string? Name { get; set; }
+    public string? Surname { get; set; }
+    public bool Gender { get; set; }
+    public int Age {get; set;}
 }

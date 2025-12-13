@@ -1,5 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using webApplication.Models
+
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
+
 
 <head>
     <meta charset="utf-8" />
@@ -34,8 +40,13 @@
 
                     <ul class="navbar-nav">
                         <li class="nav-item">
+                            @if(User.Identity.IsAuthenticated){
+                                var user = await UserManager.GetUserAsync(User);
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                                asp-action="Privacy">Profilim</a>
+                                asp-action="Privacy">@(user?.Name+" "+user?.Surname ?? User.Identity.Name)</a>}
+                            else{
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+                            }
                         </li>
                     </ul>
                 </div>
