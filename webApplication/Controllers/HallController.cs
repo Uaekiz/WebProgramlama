@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using webApplication.Data;
 using Microsoft.EntityFrameworkCore;
 using webApplication.Models;
+using webApplication.Filters;
 
 
 namespace webApplication.Controllers
 {
+    [NoCache]
     public class HallController : Controller
     {
         private readonly ApplicationDbContext _context;

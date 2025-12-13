@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using webApplication.Data;
 using webApplication.Models;
 using System.Security.Claims;
+using webApplication.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace webApplication.Controllers
 {
+     [NoCache]
     public class ReservationController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +20,7 @@ namespace webApplication.Controllers
 
         // GET: Reservation/Create?seatId=5
         [Authorize]
+        [NoCache]
         public IActionResult Create(int seatId, string date, string startTime, string endTime)
         {
             var seat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
