@@ -1,0 +1,216 @@
+@model webApplication.Models.User
+
+@{
+    ViewData["Title"] = "Profilim";
+    // Başarı mesajı varsa gösterelim
+    if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+}
+
+<div class="container py-5">
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <img src="https://ui-avatars.com/api/?name=@Model.Name+@Model.Surname&background=0d6efd&color=fff&size=128"
+                        class="rounded-circle mb-3 border border-3 border-light shadow-sm" alt="Profile">
+
+                    <h4 class="card-title">
+                        @Model.Name @Model.Surname <br> 
+                        <a asp-action="Edit" class="text-primary ms-2" title="Profili Düzenle"
+                            style="font-size: 0.8em;">
+                            <i class="bi bi-pencil-square"></i> Düzenle
+                        </a>
+                    </h4>
+
+                    <p class="text-muted mb-1">@Model.Email</p>
+                    <p class="text-muted">@(Model.PhoneNumber ?? "Telefon eklenmemiş")</p>
+
+                    <hr>
+                    <div class="text-start px-3">
+                        <small class="text-uppercase text-muted fw-bold">Detaylar</small>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>Yaş:</span>
+                            <span class="fw-bold">@Model.Age</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Cinsiyet:</span>
+                            <span class="fw-bold">@(Model.Gender ? "Erkek" : "Kadın")</span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 mt-4 px-3">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                            asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-box-arrow-right"></i> Çıkış Yap
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white p-0 border-bottom-0">
+                    <ul class="nav nav-pills p-3" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold px-4" id="reservations-tab" data-bs-toggle="pill"
+                                data-bs-target="#reservations" type="button" role="tab">
+                                Rezervasyonlarım
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold px-4 ms-2" id="applications-tab" data-bs-toggle="pill"
+                                data-bs-target="#applications" type="button" role="tab">
+                                Başvurularım
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body bg-light">
+                    <div class="tab-content" id="profileTabsContent">
+
+                        <div class="tab-pane fade show active" id="reservations" role="tabpanel">
+                            <h5 class="mb-3">Kütüphane Rezervasyon Geçmişi</h5>
+
+                            @if (Model.Reservations != null && Model.Reservations.Any())
+                            {
+                                <div class="list-group">
+                                    @foreach (var item in Model.Reservations)
+                                    {
+                                        // Tarih kontrolü: Geçmiş mi Gelecek mi?
+                                        bool isFuture = item.StartTime > DateTime.Now;
+                                        string itemClass = isFuture ? "list-group-item-light border-primary" :
+                                        "list-group-item-secondary text-muted";
+
+                                        <div
+                                            class="list-group-item @itemClass mb-2 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">@item.Seat?.Hall?.Name - Koltuk: @item.Seat?.SeatNumber</h6>
+                                                <small>
+                                                    <i class="bi bi-clock"></i>
+                                                    @item.StartTime.ToString("dd.MM.yyyy HH:mm") -
+                                                    @item.EndTime.ToString("HH:mm")
+                                                </small>
+                                                @if (!isFuture)
+                                                {
+                                                    <span class="badge bg-secondary ms-2">Tamamlandı</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success ms-2">Aktif</span>
+                                                }
+                                            </div>
+
+                                            @if (isFuture)
+                                            {
+                                                <form asp-action="CancelReservation" method="post"
+                                                    onsubmit="return confirm('Bu rezervasyonu iptal etmek istediğinize emin misiniz?');">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="İptal Et">
+                                                        İptal
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">Henüz bir rezervasyonunuz bulunmamaktadır.</div>
+                            }
+                        </div>
+
+                        <div class="tab-pane fade" id="applications" role="tabpanel">
+
+                            <h6 class="text-primary border-bottom pb-2">Spor Başvuruları</h6>
+                            @if (Model.SportRegistrations != null && Model.SportRegistrations.Any())
+                            {
+                                <div class="list-group mb-4">
+                                    @foreach (var item in Model.SportRegistrations)
+                                    {
+                                        bool isPending = item.Status == "Onay Bekliyor";
+
+                                        <div
+                                            class="list-group-item mb-2 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">@item.Sport?.Name</h6>
+                                                <small class="text-muted">Gün: @item.SelectedDay | Kayıt:
+                                                    @item.RegistrationDate.ToString("dd.MM.yyyy")</small>
+                                                <br />
+                                                <span class="badge @(isPending ? "bg-warning text-dark" : "bg-success")">
+                                                    @item.Status
+                                                </span>
+                                            </div>
+
+                                            @if (isPending)
+                                            {
+                                                <form asp-action="CancelSport" method="post"
+                                                    onsubmit="return confirm('Başvuruyu silmek istediğinize emin misiniz?');">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        Sil
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted small mb-4">Spor başvurusu yok.</p>
+                            }
+
+                            <h6 class="text-primary border-bottom pb-2">Kurs Başvuruları</h6>
+                            @if (Model.CourseRegistrations != null && Model.CourseRegistrations.Any())
+                            {
+                                <div class="list-group">
+                                    @foreach (var item in Model.CourseRegistrations)
+                                    {
+                                        bool isPending = item.Status == "Onay Bekliyor";
+
+                                        <div
+                                            class="list-group-item mb-2 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">@item.Course?.Name</h6>
+                                                <small class="text-muted">Gün: @item.SelectedDay | Kayıt:
+                                                    @item.RegistrationDate.ToString("dd.MM.yyyy")</small>
+                                                <br />
+                                                <span class="badge @(isPending ? "bg-warning text-dark" : "bg-success")">
+                                                    @item.Status
+                                                </span>
+                                            </div>
+
+                                            @if (isPending)
+                                            {
+                                                <form asp-action="CancelCourse" method="post"
+                                                    onsubmit="return confirm('Başvuruyu silmek istediğinize emin misiniz?');">
+                                                    <input type="hidden" name="id" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                        Sil
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted small">Kurs başvurusu yok.</p>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

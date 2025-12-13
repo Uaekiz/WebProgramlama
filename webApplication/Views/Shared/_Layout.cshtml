@@ -42,8 +42,8 @@
                         <li class="nav-item">
                             @if(User.Identity.IsAuthenticated){
                                 var user = await UserManager.GetUserAsync(User);
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
-                                asp-action="Privacy">@(user?.Name+" "+user?.Surname ?? User.Identity.Name)</a>}
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Profile"
+                                asp-action="Index">@(user?.Name+" "+user?.Surname ?? User.Identity.Name)</a>}
                             else{
                                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
                             }
