@@ -8,54 +8,58 @@
 }
 
 <style>
-   .seat-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 70px);   /* koltuklar küçüldü */
-    gap: 18px;                                /* aralar daha sıkı */
-    justify-content: center;
-    margin-top: 30px;
-}
+    .seat-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 70px);
+        /* koltuklar küçüldü */
+        gap: 18px;
+        /* aralar daha sıkı */
+        justify-content: center;
+        margin-top: 30px;
+    }
 
     .seat {
-    width: 50px;                 /* Daha küçük */
-    height: 50px;                /* Daha ince uzun */
-    border-radius: 18px;
-    padding-top: 18px;
-    font-size: 20px;
+        width: 50px;
+        /* Daha küçük */
+        height: 50px;
+        /* Daha ince uzun */
+        border-radius: 18px;
+        padding-top: 18px;
+        font-size: 20px;
 
-    background: linear-gradient(#4caf50, #2e8b57);
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+        background: linear-gradient(#4caf50, #2e8b57);
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.35);
-    transition: transform 0.2s ease;
-}
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.35);
+        transition: transform 0.2s ease;
+    }
 
 
-.seat::before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    width: 45px;
-    height: 18px;
-    border-radius: 10px;
-    background: inherit;
-    box-shadow: 0px 3px 5px rgba(0,0,0,0.30);
-}
+    .seat::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        width: 45px;
+        height: 18px;
+        border-radius: 10px;
+        background: inherit;
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.30);
+    }
 
-  .seat::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    width: 60%;
-    height: 8px;
-    background: rgba(0,0,0,0.35);
-    border-radius: 50%;
-    filter: blur(3px);
-}  
+    .seat::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        width: 60%;
+        height: 8px;
+        background: rgba(0, 0, 0, 0.35);
+        border-radius: 50%;
+        filter: blur(3px);
+    }
 
 
 
@@ -76,56 +80,75 @@
         background: linear-gradient(145deg, #e74c3c, #b63728);
         cursor: not-allowed;
     }
-   .table-row {
-    grid-column: 1 / -1;           /* tüm satırı kaplasın */
-    height: 45px;                  /* daha kalın masa */
-    background: linear-gradient(#dcdcdc, #bfbfbf);
-    border-radius: 8px;
-    margin: 12px 0 22px 0;
 
-    box-shadow:
-        inset 0 2px 4px rgba(255,255,255,0.5),
-        inset 0 -3px 6px rgba(0,0,0,0.25),
-        0 4px 10px rgba(0,0,0,0.25);    /* gerçek masa efekti */
-}
+    .table-row {
+        grid-column: 1 / -1;
+        /* tüm satırı kaplasın */
+        height: 45px;
+        /* daha kalın masa */
+        background: linear-gradient(#dcdcdc, #bfbfbf);
+        border-radius: 8px;
+        margin: 12px 0 22px 0;
 
-   .info-box {
-        background: #162533; /* İstenen koyu arka plan rengi */
+        box-shadow:
+            inset 0 2px 4px rgba(255, 255, 255, 0.5),
+            inset 0 -3px 6px rgba(0, 0, 0, 0.25),
+            0 4px 10px rgba(0, 0, 0, 0.25);
+        /* gerçek masa efekti */
+    }
+
+    .info-box {
+        background: #162533;
+        /* İstenen koyu arka plan rengi */
         padding: 15px;
         border-radius: 10px;
-        border-left: none; /* Mavi kenarlık kaldırıldı */
-        border: 1px solid rgba(255, 255, 255, 0.1); /* Hafif beyaz çerçeve */
-        color: #ffffff; /* Yazı rengi beyaz */
+        border-left: none;
+        /* Mavi kenarlık kaldırıldı */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Hafif beyaz çerçeve */
+        color: #ffffff;
+        /* Yazı rengi beyaz */
         font-size: 16px;
         margin-bottom: 20px;
     }
-    
+
     .info-box strong {
-        color: #e95d2c ; /* Vurgulu kelimeleri sarı yapalım */
+        color: #e95d2c;
+        /* Vurgulu kelimeleri sarı yapalım */
     }
 
     /* ---------------------------------------------------- */
     /* FİLTRELE BUTONU İÇİN STİL */
     /* ---------------------------------------------------- */
-    
+
     /* Filtrele butonu için genel stil */
     .btn-filtrele-turuncu {
-        background-color: #e95d2c !important; /* İstenen Ana Rengi Uygula */
+        background-color: #e95d2c !important;
+        /* İstenen Ana Rengi Uygula */
         border-color: #e95d2c !important;
         color: #ffffff !important;
         font-weight: bold;
         transition: background-color 0.3s ease;
     }
-    
+
     .btn-filtrele-turuncu:hover {
-        background-color: #a63e1b !important; /* İstenen Hover Rengi */
+        background-color: #a63e1b !important;
+        /* İstenen Hover Rengi */
         border-color: #a63e1b !important;
         color: #ffffff !important;
     }
 
     /* Başlıklar ve Form Etiketleri */
-    h2, label {
+    h2,
+    label {
         color: #ffffff;
+    }
+
+    select.form-control {
+        height: 45px;
+        /* Diğer kutularla aynı yükseklik */
+        border-radius: 5px;
+        cursor: pointer;
     }
 </style>
 
@@ -147,9 +170,9 @@
 @if (!filterApplied)
 {
     <div class="info-box">
-        Lütfen rezervasyon yapmak istediğiniz 
+        Lütfen rezervasyon yapmak istediğiniz
         <strong>tarih</strong> ve <strong>saat </strong> aralığını seçin. Ardından boş (yeşil)
-         koltuklara tıklayarak seçim yapabilirsiniz.
+        koltuklara tıklayarak seçim yapabilirsiniz.
 
     </div>
 }
@@ -157,24 +180,65 @@
 <form method="get" style="margin-bottom:20px;">
     <input type="hidden" name="id" value="@Model.Id" />
 
-   <div class="form-group">
+    <div class="form-group">
     <label>Tarih seçiniz</label>
     <select name="date" class="form-control">
-        <option value="@DateTime.Today.ToString("yyyy-MM-dd")">
-           Bugün (@DateTime.Today.ToString("dd.MM.yyyy"))
-        </option>
+        @{
+            // Bugün ve Yarın'ın string değerlerini alalım
+            string bugun = DateTime.Today.ToString("yyyy-MM-dd");
+            string yarin = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
+            
+            // Controller'dan gelen seçili tarih bilgisini alalım
+            string secilenTarih = ViewBag.SelectedDateString as string;
+        }
 
-        <option value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")">
+        <!option value="@bugun" @(secilenTarih == bugun ? "selected" : "")>
+            Bugün (@DateTime.Today.ToString("dd.MM.yyyy"))
+        </!option>
+
+        <!option value="@yarin" @(secilenTarih == yarin ? "selected" : "")>
             Yarın (@DateTime.Today.AddDays(1).ToString("dd.MM.yyyy"))
-        </option>
+        </!option>
     </select>
 </div>
 
     <div class="form-group" style="margin-top:10px;">
-        <label>Başlangıç saati</label>
-        <input type="time" id="startTime" name="startTime" class="form-control"
-            value="@(filterApplied? selectedStart?.ToString("HH:mm") : "")" required />
-    </div>
+    <label>Başlangıç saati</label>
+    <select id="startTime" name="startTime" class="form-control" required>
+        <option value="">Saat Seçiniz</option>
+        
+        @{
+            // Seçilen tarihi al (Eğer boşsa varsayılan Bugün'dür)
+            // Not: Controller'dan gelen SelectedDateString'i kullanıyoruz
+            string urlTarih = ViewBag.SelectedDateString as string ?? DateTime.Today.ToString("yyyy-MM-dd");
+            
+            // Seçilen tarih BUGÜN mü?
+            bool bugunMu = (urlTarih == DateTime.Today.ToString("yyyy-MM-dd"));
+            
+            // Şu anki saati al (Örn: 14:30 ise 14 alır)
+            int suankiSaat = DateTime.Now.Hour;
+        }
+
+        @for (int i = 9; i < 24; i++) 
+        {
+            // --- KRİTİK NOKTA ---
+            // Eğer tarih bugünse VE döngüdeki saat şu anki saatten küçük veya eşitse
+            // O saati LİSTELEME (continue diyerek pas geç)
+            if (bugunMu && i <= suankiSaat)
+            {
+                continue; 
+            }
+            // --------------------
+
+            string saat = i.ToString("00") + ":00";
+            string secilenSaat = ViewBag.SelectedStartString as string;
+
+            <option value="@saat" selected="@(secilenSaat == saat)">
+                @saat
+            </option>
+        }
+    </select>
+</div>
 
     <div class="form-group" style="margin-top:10px;">
         <label>Bitiş saati</label>
@@ -203,9 +267,9 @@
             if (selectedStart.HasValue && selectedEnd.HasValue)
             {
                 isReserved = reservations.Any(r =>
-                    r.SeatId == seat.Id &&
-                    r.StartTime < selectedEnd &&
-                    r.EndTime > selectedStart
+                r.SeatId == seat.Id &&
+                r.StartTime < selectedEnd &&
+                r.EndTime > selectedStart
                 );
             }
 
@@ -213,8 +277,8 @@
             string message = isReserved ? "Bu saat aralığında dolu" : "Rezerve etmek için tıklayın";
 
             <div class="@cssClass" title="@message"
-                 onclick="@(isReserved ? "" :
-                     $"window.location='/Reservation/Create?seatId={seat.Id}&date={selectedStart?.ToString("yyyy-MM-dd")}&startTime={selectedStart?.ToString("HH:mm")}&endTime={selectedEnd?.ToString("HH:mm")}'")">
+                onclick="@(isReserved ? "" :
+                                     $"window.location='/Reservation/Create?seatId={seat.Id}&date={selectedStart?.ToString("yyyy-MM-dd")}&startTime={selectedStart?.ToString("HH:mm")}&endTime={selectedEnd?.ToString("HH:mm")}'")">
                 @seat.SeatNumber
             </div>
 
@@ -227,20 +291,30 @@
     </div>
 }
 
-
-
 @section Scripts {
     <script>
         document.getElementById("startTime").addEventListener("change", function () {
-            let start = this.value;
+            // Seçilen değeri al (Örn: "14:00")
+            let secilenSaat = this.value;
 
-            if (start) {
-                let [hours, minutes] = start.split(":");
-                hours = parseInt(hours) + 1;
-                if (hours === 24) hours = 0;
+            if (secilenSaat) {
+                // Sadece saati (ilk iki hane) al ve sayıya çevir. Örn: 14
+                let saatSayisi = parseInt(secilenSaat.substring(0, 2));
 
-                document.getElementById("endTime").value =
-                    hours.toString().padStart(2, '0') + ":" + minutes;
+                // 1 saat ekle
+                let bitisSaati = saatSayisi + 1;
+
+                // Eğer 24 olduysa 00 yap (Gece yarısı döngüsü)
+                if (bitisSaati === 24) bitisSaati = 0;
+
+                // Formatı ayarla (Tek haneli ise başına 0 koy) -> "09:00" veya "15:00"
+                let formatliBitis = bitisSaati.toString().padStart(2, '0') + ":00";
+
+                // Bitiş kutusuna yaz
+                document.getElementById("endTime").value = formatliBitis;
+            } else {
+                // Seçim iptal edilirse kutuyu boşalt
+                document.getElementById("endTime").value = "";
             }
         });
     </script>

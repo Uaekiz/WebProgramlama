@@ -2,6 +2,14 @@
 
 <h2>Rezervasyon oluştur</h2>
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger shadow-sm mb-4">
+        <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Hata!</h5>
+        <hr>
+        @Html.ValidationSummary(false, "", new { @class = "mb-0 text-danger" })
+    </div>
+}
 <div class="alert alert-info">
     <strong>Koltuk:</strong> @ViewBag.SeatNumber
 </div>
