@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webApplication.Data;
 using webApplication.Models;
+using webApplication.Filters;
 using System.Security.Claims;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace webApplication.Controllers
 {
     [Authorize]
+    [NoCache]
     public class ProfileController : Controller
     {
         private readonly UserManager<User> _userManager;
