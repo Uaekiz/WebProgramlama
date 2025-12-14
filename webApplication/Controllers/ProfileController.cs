@@ -44,8 +44,6 @@ namespace webApplication.Controllers
 
             if (user == null) return NotFound();
 
-            // Verileri View'a göndermeden önce bellekte sıralayalım (Yeniden eskiye)
-            // Not: Listeler ICollection olduğu için burada sıralamak View'da işimizi kolaylaştırır.
             user.Reservations = user.Reservations.OrderByDescending(r => r.StartTime).ToList();
             user.SportRegistrations = user.SportRegistrations.OrderByDescending(s => s.RegistrationDate).ToList();
             user.CourseRegistrations = user.CourseRegistrations.OrderByDescending(c => c.RegistrationDate).ToList();

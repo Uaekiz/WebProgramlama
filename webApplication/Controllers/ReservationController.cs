@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webApplication.Controllers
 {
-     [NoCache]
+    [NoCache]
     public class ReservationController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -54,8 +54,44 @@ namespace webApplication.Controllers
             DateTime start = DateTime.Parse(selectedDate + " " + startTime);
             DateTime end = DateTime.Parse(selectedDate + " " + endTime);
 
+            if (start < DateTime.Now)
+            {
+                ModelState.AddModelError("", "Geçmiş bir zamana rezervasyon yapamazsınız.");
+
+                // Sayfa patlamasın diye gerekli verileri geri yüklüyoruz
+                var tempSeat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
+                ViewBag.SeatNumber = tempSeat?.SeatNumber;
+                ViewBag.SelectedDate = selectedDate;
+                ViewBag.SelectedStart = startTime;
+                ViewBag.SelectedEnd = endTime;
+
+                return View(new Reservation { SeatId = seatId });
+            }
+
             // Kullanıcının ID'sini alıyoruz
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            bool userHasConflict = _context.Reservations.Any(r =>
+                r.UserId == currentUserId &&
+                r.StartTime.Date == start.Date &&
+                start < r.EndTime &&
+                end > r.StartTime
+            );
+
+            if (userHasConflict)
+            {
+                ModelState.AddModelError("", "Bu saat aralığında zaten başka bir rezervasyonunuz bulunuyor.");
+
+                // Sayfa hataya düşünce patlamaması için gerekli bilgileri tekrar yüklüyoruz
+                var tempSeat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
+                ViewBag.SeatNumber = tempSeat?.SeatNumber;
+                ViewBag.SelectedDate = selectedDate;
+                ViewBag.SelectedStart = startTime;
+                ViewBag.SelectedEnd = endTime;
+
+                // View bir model beklediği için geçici bir tane oluşturup yolluyoruz
+                return View(new Reservation { SeatId = seatId });
+            }
 
             // Model nesnesini oluştur
             var reservation = new Reservation
