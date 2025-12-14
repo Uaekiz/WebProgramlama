@@ -106,7 +106,7 @@ namespace webApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                // 1. KONTENJAN KONTROLÜ
+               
                 var sportDetails = await _context.Sports
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.Id == registration.SportId);
@@ -126,7 +126,7 @@ namespace webApplication.Controllers
                     return View("Form", registration);
                 }
 
-                // 2. KAYIT İŞLEMİ
+               
                 registration.RegistrationDate = DateTime.Now;
                 registration.Status = "Onay Bekliyor";
 
