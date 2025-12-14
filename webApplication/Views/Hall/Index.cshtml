@@ -1,26 +1,27 @@
 @model IEnumerable<webApplication.Models.Hall>
 
 <style>
-    /* Başlık Modernizasyon */
+    /* Başlık Stil ve Renk (Beyaz ve Altın Çizgi) */
     .page-title {
         text-align: center;
         font-size: 32px;
         font-weight: bold;
         margin-top: 20px;
         position: relative;
+        color: #ffffff !important; 
     }
 
     .page-title::after {
         content: "";
         width: 80px;
         height: 4px;
-        background: #0d6efd;
+        background: #e95d2c; /* Vurgu rengi */
         display: block;
         margin: 10px auto 0;
         border-radius: 5px;
     }
 
-    /* Kartlar */
+    /* Kapsayıcı */
     .hall-container {
         display: flex;
         gap: 25px;
@@ -30,61 +31,81 @@
         padding-bottom: 50px;
     }
 
+    /* KARTLARIN TEMEL STİLİ (Tek Renk: #162533) */
     .hall-card {
         width: 260px;
         padding: 22px;
         border-radius: 18px;
-        background: #ffffff;
-        border-top: 6px solid #0d6efd;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        /* İstenen Tek Renk */
+        background: #162533; 
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
         text-align: center;
         position: relative;
         overflow: hidden;
+        color: #ffffff; /* Tüm kart içeriği beyaz olsun */
     }
 
     .hall-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
     }
 
-    /* Emoji ikon daha büyük ve parlak */
+    /* İKONLAR (Font Awesome İkonları için stil) */
     .hall-icon {
         font-size: 48px;
         margin-bottom: 12px;
-        filter: drop-shadow(0 0 5px rgba(13, 110, 253, 0.35));
+        color: #b0cee2; /* İkon rengini vurgu sarısı yap */
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
     }
 
     .hall-title {
         font-size: 22px;
+        color: #ffffff; /* Başlıklar Beyaz */
         font-weight: bold;
         margin-bottom: 8px;
     }
 
     .hall-description p {
         font-size: 15px;
-        color: #555;
+        color: #ccc;
         line-height: 1.35;
         height: 58px;
-        /* Kart boyutu eşitlensin diye */
         margin-bottom: 8px;
     }
 
     .hall-info {
         font-size: 16px;
         font-weight: 500;
-        color: #333;
+        color: #ddd;
         margin-bottom: 15px;
     }
+    
+    .hall-info strong {
+        color: #ffffff;
+    }
 
+    /* BUTON STİLİ (İstenen Turuncu Renk) */
     .select-btn {
         margin-top: 5px;
         padding: 10px 20px;
         border-radius: 10px;
         font-size: 16px;
         width: 140px;
+        background-color: #e95d2c; /* İstenen Buton Rengi */
+        border: none;
+        color: #ffffff;
+        font-weight: bold;
+        transition: background-color 0.25s ease;
     }
 
+    .select-btn:hover {
+        background-color: #a63e1b; /* İstenen Hover Rengi */
+        color: #ffffff;
+    }
+
+    /* Giriş Metni (Library Hero) */
     .library-hero {
         text-align: center;
         margin-top: 40px;
@@ -92,20 +113,8 @@
         padding: 20px;
     }
 
-    .library-hero h1 {
-        font-size: 32px;
-        font-weight: 700;
-        color: #1a1a1a;
-    }
-
-    .library-hero p {
-        font-size: 18px;
-        color: #555;
-        margin-top: 10px;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-        line-height: 1.6;
+    .library-hero h1, .library-hero p {
+        color: #ffffff !important;
     }
 </style>
 
@@ -127,16 +136,17 @@
 
     @foreach (var hall in Model)
     {
-        string icon = hall.Type switch
+        // YENİ: Font Awesome ikonları (fas fa-...) kullanıldı
+        string iconClass = hall.Type switch
         {
-            "Computer" => "💻",
-            "Study" => "📚",
-            "Library" => "📖",
-            _ => "🏛️"
+            "Computer" => "fas fa-laptop-code", // Bilgisayar Salonu
+            "Study" => "fas fa-graduation-cap", // Çalışma Salonu (Mezuniyet şapkası/Öğrenme)
+            "Library" => "fas fa-book-open",    // Okuma Salonu
+            _ => "fas fa-building"              // Varsayılan
         };
 
         <div class="hall-card">
-            <div class="hall-icon">@icon</div>
+            <div class="hall-icon"><i class="@iconClass"></i></div>
 
             <div class="hall-title">@hall.Name</div>
 
