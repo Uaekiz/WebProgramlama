@@ -34,16 +34,27 @@ namespace webApplication.Controllers
 
             if (hall == null) return NotFound();
 
-            // İlk giriş mi? (Filtre yok)
-            if (string.IsNullOrEmpty(date) || string.IsNullOrEmpty(startTime) || string.IsNullOrEmpty(endTime))
+            // --- DÜZELTME BAŞLANGICI ---
+
+            // Tarih parametresi boşsa Bugünü, doluysa geleni al.
+            string dateStr = date ?? DateTime.Today.ToString("yyyy-MM-dd");
+
+            // Bunu EN BAŞTA ViewBag'e atıyoruz ki View hangi günde olduğunu bilsin.
+            ViewBag.SelectedDateString = dateStr;
+
+            // Saat seçilmemişse (Sadece sayfa açıldıysa veya tarih değiştirildiyse)
+            if (string.IsNullOrEmpty(startTime) || string.IsNullOrEmpty(endTime))
             {
                 ViewBag.FilterApplied = false;
                 ViewBag.Reservations = new List<Reservation>();
 
+                // Artık View'a döndüğümüzde 'dateStr' bilgisini biliyor olacak!
                 return View(hall);
             }
 
-            // Filtre VAR → değerleri ViewBag'e koy
+            // --- DÜZELTME BİTİŞİ ---
+
+            // Filtre VAR (Aşağısı aynen kalabilir)
             ViewBag.FilterApplied = true;
 
             DateTime selectedStart = DateTime.Parse($"{date} {startTime}");
@@ -52,12 +63,10 @@ namespace webApplication.Controllers
             ViewBag.SelectedStart = selectedStart;
             ViewBag.SelectedEnd = selectedEnd;
 
-            // Bu 3 değer Create sayfasına taşınacak!
-            ViewBag.SelectedDateString = date;
+            // ViewBag.SelectedDateString = date; // <-- Bunu yukarı taşıdığımız için buradan silebilirsin
             ViewBag.SelectedStartString = startTime;
             ViewBag.SelectedEndString = endTime;
 
-            // Çakışan rezervasyonlar
             var reservations = _context.Reservations
                 .Where(r => r.Seat.HallId == id &&
                             r.StartTime < selectedEnd &&

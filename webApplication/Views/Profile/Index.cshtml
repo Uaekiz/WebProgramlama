@@ -214,3 +214,20 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Sayfa tarayıcı geçmişinden (Back tuşuyla) geliyorsa yakala
+        window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted || 
+                                   ( typeof window.performance != "undefined" && 
+                                     window.performance.navigation.type === 2 );
+            
+            if ( historyTraversal ) {
+                // Eğer geri tuşuyla gelindiyse sayfayı zorla yenile.
+                // Sayfa yenilenince sunucu oturumun kapalı olduğunu anlayıp Login'e atacak.
+                window.location.reload();
+            }
+        });
+    </script>
+}
