@@ -4,7 +4,7 @@ namespace webApplication.Models
 {
     public class ProfileEditViewModel
     {
-        [Display(Name = "Ad")]
+        [Display(Name = "Ad")]  //We did U of CRUD with edit of the profile and we added some areas for UserInterface
         [Required(ErrorMessage = "Ad alanı zorunludur.")]
         public string Name { get; set; }
 
@@ -22,8 +22,6 @@ namespace webApplication.Models
 
         [Display(Name = "Yaş")]
         public int Age { get; set; }
-
-        // --- ŞİFRE DEĞİŞTİRME ALANLARI (Zorunlu Değil) ---
 
         [DataType(DataType.Password)]
         [Display(Name = "Mevcut Şifre")]

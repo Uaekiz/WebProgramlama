@@ -18,12 +18,12 @@
 
     <input type="hidden" asp-for="SeatId" />
 
-    <!-- Backend'e gönderilecek gizli inputlar -->
+    <!-- They are the hidden information that will be sent to the backend -->
     <input type="hidden" name="selectedDate" value="@ViewBag.SelectedDate" />
     <input type="hidden" name="startTime" value="@ViewBag.SelectedStart" />
     <input type="hidden" name="endTime" value="@ViewBag.SelectedEnd" />
 
-    <!-- Kullanıcıya sadece gösterilecek alanlar -->
+    <!-- The user must see this -->
     <div class="form-group mb-3">
         <label>Tarih</label>
         <input class="form-control" value="@ViewBag.SelectedDate" readonly />

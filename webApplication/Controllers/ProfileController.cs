@@ -11,34 +11,30 @@ using System.Threading.Tasks;
 
 namespace webApplication.Controllers
 {
-    [Authorize]
-    [NoCache]
+    [Authorize]//of course authorize because its completly about the user
+    [NoCache]//it is important because after log out, we mustnt be able to go back directly the profile with the back button
     public class ProfileController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly ApplicationDbContext _context;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager; //to find the user
+        private readonly ApplicationDbContext _context; //to list the reservations, courses and sports
+        private readonly SignInManager<User> _signInManager; // to refresh the user data
 
         public ProfileController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext context)
         {
-            _userManager = userManager;
+            _userManager = userManager; //we start them
             _signInManager = signInManager; 
             _context = context;
         }
 
-        // GET: /Profile/Index
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = _userManager.GetUserId(User); //find the user
 
-            var user = await _context.Users
-                // Spor Başvurularını Çek (Spor detayıyla beraber)
+            var user = await _context.Users //its like inner join in sql, we pull the information with their FK
                 .Include(u => u.SportRegistrations)
                     .ThenInclude(sr => sr.Sport)
-                // Kurs Başvurularını Çek (Kurs detayıyla beraber)
                 .Include(u => u.CourseRegistrations)
                     .ThenInclude(cr => cr.Course)
-                // Rezervasyonları Çek (Koltuk ve Salon detayıyla beraber)
                 .Include(u => u.Reservations)
                     .ThenInclude(r => r.Seat)
                     .ThenInclude(s => s.Hall)
@@ -46,58 +42,55 @@ namespace webApplication.Controllers
 
             if (user == null) return NotFound();
 
-            user.Reservations = user.Reservations.OrderByDescending(r => r.StartTime).ToList();
+            user.Reservations = user.Reservations.OrderByDescending(r => r.StartTime).ToList(); //we list them
             user.SportRegistrations = user.SportRegistrations.OrderByDescending(s => s.RegistrationDate).ToList();
             user.CourseRegistrations = user.CourseRegistrations.OrderByDescending(c => c.RegistrationDate).ToList();
 
             return View(user);
         }
 
-        // POST: Rezervasyon İptal Et (Sil)
-        [HttpPost]
+        [HttpPost]//canceling a reservation is a post request
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelReservation(int id)
         {
             var userId = _userManager.GetUserId(User);
-            // Sadece bu kullanıcıya ait ve ID'si tutan rezervasyonu bul
-            var reservation = await _context.Reservations
+            var reservation = await _context.Reservations //we double check, it is the correct reservataion and
+            //  it is really user's reservation
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
 
             if (reservation != null)
             {
-                // Tarihi geçmiş mi kontrolü (Controller tarafında da güvenlik için)
-                if (reservation.StartTime > DateTime.Now)
+                if (reservation.StartTime > DateTime.Now)//if it is from future we can cancel 
+                // if not of course you cant cancel, bitti borun pazarı sür eşşeği niğdeye
                 {
                     _context.Reservations.Remove(reservation);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Rezervasyon iptal edildi.";
+                    TempData["SuccessMessage"] = "Rezervasyon iptal edildi."; // if it is deleted successfully, we show it
                 }
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Spor Başvurusu İptal Et
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelSport(int id)
         {
             var userId = _userManager.GetUserId(User);
             var registration = await _context.SportRegistrations
-                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId); //the same control for sport
 
-            if (registration != null && registration.Status == "Onay Bekliyor")
+            if (registration != null && registration.Status == "Onay Bekliyor")//if it still waiting for "approval" it can be canceled
             {
                 _context.SportRegistrations.Remove(registration);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Spor başvurusu silindi.";
+                TempData["SuccessMessage"] = "Spor başvurusu silindi."; 
             }
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Kurs Başvurusu İptal Et
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CancelCourse(int id)
+        public async Task<IActionResult> CancelCourse(int id) //again same thing with sports and reservaations
         {
             var userId = _userManager.GetUserId(User);
             var registration = await _context.CourseRegistrations
@@ -118,7 +111,6 @@ namespace webApplication.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            // Mevcut bilgileri kutucuklara dolduruyoruz
             var model = new ProfileEditViewModel
             {
                 Name = user.Name,
@@ -131,12 +123,10 @@ namespace webApplication.Controllers
             return View(model);
         }
 
-        // -----------------------------------------------------------
-        // 2. GÜNCELLEMEYİ KAYDET (POST)
-        // -----------------------------------------------------------
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProfileEditViewModel model)
+        public async Task<IActionResult> Edit(ProfileEditViewModel model) //thats the edit part that
+        //  user can edit their information
         {
             if (!ModelState.IsValid)
             {
@@ -146,15 +136,13 @@ namespace webApplication.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            // --- Temel Bilgileri Güncelle ---
             user.Name = model.Name;
             user.Surname = model.Surname;
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.Age = model.Age;
-            user.UserName = model.Email; // Genelde kullanıcı adı email ile aynı tutulur
+            user.UserName = model.Email; //we pull their informations
 
-            // --- Şifre Değişikliği İstenmiş mi? ---
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
                 if (string.IsNullOrEmpty(model.CurrentPassword))
@@ -163,10 +151,10 @@ namespace webApplication.Controllers
                     return View(model);
                 }
 
-                // Şifreyi değiştirmeyi dene
                 var passwordChangeResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                //we try to change the password and check it is succeded or not
 
-                if (!passwordChangeResult.Succeeded)
+                if (!passwordChangeResult.Succeeded)//if not we show the mistake
                 {
                     foreach (var error in passwordChangeResult.Errors)
                     {
@@ -176,20 +164,18 @@ namespace webApplication.Controllers
                 }
             }
 
-            // --- Kullanıcıyı Kaydet ---
             var updateResult = await _userManager.UpdateAsync(user);
 
-            if (updateResult.Succeeded)
+            if (updateResult.Succeeded) //if it is okey
             {
-                // ÖNEMLİ: Şifre veya kritik bilgi değişince oturum tazelemek gerekir
-                await _signInManager.RefreshSignInAsync(user);
+                await _signInManager.RefreshSignInAsync(user);//we should use await bcs you changed the information,
+                //  but the cookies may not know you changed and remove the user from the system
 
                 TempData["SuccessMessage"] = "Profiliniz başarıyla güncellendi.";
                 return RedirectToAction("Index");
             }
 
-            // Hata varsa listele
-            foreach (var error in updateResult.Errors)
+            foreach (var error in updateResult.Errors)//if there is a mistake, again we show 
             {
                 ModelState.AddModelError("", error.Description);
             }

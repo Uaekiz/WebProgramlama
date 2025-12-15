@@ -8,27 +8,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace webApplication.Controllers
 {
-    [NoCache]
+    [NoCache]//the filter
     public class ReservationController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;//database
 
         public ReservationController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Reservation/Create?seatId=5
-        [Authorize]
+        [Authorize]//of course if they are in reservation page they must log in
         [NoCache]
         public IActionResult Create(int seatId, string date, string startTime, string endTime)
         {
-            var seat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
+            var seat = _context.Seats.FirstOrDefault(s => s.Id == seatId); //it pull the clicked seat
             if (seat == null) return NotFound();
 
             ViewBag.SeatNumber = seat.SeatNumber;
-
-            // Form ekranında sadece görüntülemek için
             ViewBag.SelectedDate = date;
             ViewBag.SelectedStart = startTime;
             ViewBag.SelectedEnd = endTime;
@@ -38,27 +35,24 @@ namespace webApplication.Controllers
                 SeatId = seatId
             };
 
-            return View(reservation);
+            return View(reservation); //we prepare all of thing for user to confirm
         }
 
 
-
-        // POST: Reservation/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ActionName("Create")]
-        public IActionResult CreatePost(int seatId, string selectedDate, string startTime, string endTime) // "userName" parametresini sildim
+        [ActionName("Create")]// two create function and same parameter but for different proccess, we changed its name
+        public IActionResult CreatePost(int seatId, string selectedDate, string startTime, string endTime) 
         {
-            // Tarih ve saatleri birleştir
+        
             DateTime date = DateTime.Parse(selectedDate);
             DateTime start = DateTime.Parse(selectedDate + " " + startTime);
-            DateTime end = DateTime.Parse(selectedDate + " " + endTime);
+            DateTime end = DateTime.Parse(selectedDate + " " + endTime);  
 
-            if (start < DateTime.Now)
+            if (start < DateTime.Now)//it is impossible thans to our view but, if the user select a time past we should error it
             {
                 ModelState.AddModelError("", "Geçmiş bir zamana rezervasyon yapamazsınız.");
 
-                // Sayfa patlamasın diye gerekli verileri geri yüklüyoruz
                 var tempSeat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
                 ViewBag.SeatNumber = tempSeat?.SeatNumber;
                 ViewBag.SelectedDate = selectedDate;
@@ -68,45 +62,41 @@ namespace webApplication.Controllers
                 return View(new Reservation { SeatId = seatId });
             }
 
-            // Kullanıcının ID'sini alıyoruz
-            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier); //for reservation, we pull users id
 
-            bool userHasConflict = _context.Reservations.Any(r =>
+            bool userHasConflict = _context.Reservations.Any(r => //this boolean variable is neccesery for
+            //  the user have a reservation at the same time
                 r.UserId == currentUserId &&
                 r.StartTime.Date == start.Date &&
                 start < r.EndTime &&
                 end > r.StartTime
             );
 
-            if (userHasConflict)
+            if (userHasConflict)//if they have we should warn them
             {
                 ModelState.AddModelError("", "Bu saat aralığında zaten başka bir rezervasyonunuz bulunuyor.");
 
-                // Sayfa hataya düşünce patlamaması için gerekli bilgileri tekrar yüklüyoruz
                 var tempSeat = _context.Seats.FirstOrDefault(s => s.Id == seatId);
                 ViewBag.SeatNumber = tempSeat?.SeatNumber;
                 ViewBag.SelectedDate = selectedDate;
                 ViewBag.SelectedStart = startTime;
                 ViewBag.SelectedEnd = endTime;
 
-                // View bir model beklediği için geçici bir tane oluşturup yolluyoruz
                 return View(new Reservation { SeatId = seatId });
             }
 
-            // Model nesnesini oluştur
             var reservation = new Reservation
             {
                 SeatId = seatId,
                 StartTime = start,
                 EndTime = end,
-                UserId = currentUserId // ARTIK BURAYA USERID YAZIYORUZ
+                UserId = currentUserId 
             };
 
-            // ViewBag değerlerini HER durumda doldur
+            //Under here as I mentioned before up, there are some control that already under control by view
             ViewBag.Today = DateTime.Today.ToString("yyyy-MM-dd");
             ViewBag.Tomorrow = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
 
-            // Sadece bugün ve yarın için izin ver
             var minDate = DateTime.Today;
             var maxDate = DateTime.Today.AddDays(1);
 
@@ -117,14 +107,12 @@ namespace webApplication.Controllers
                 return View(reservation);
             }
 
-            // Bitiş başlangıçtan büyük olmalı
             if (reservation.StartTime >= reservation.EndTime)
             {
                 ModelState.AddModelError("", "Bitiş saati başlangıç saatinden büyük olmalıdır.");
                 return View(reservation);
             }
 
-            // ÇAKIŞMA KONTROLÜ
             bool conflict = _context.Reservations.Any(r =>
                 r.SeatId == reservation.SeatId &&
                 r.StartTime.Date == reservation.StartTime.Date &&
@@ -138,17 +126,14 @@ namespace webApplication.Controllers
                 return View(reservation);
             }
 
-            // Her şey tamamsa kaydet
             _context.Reservations.Add(reservation);
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = $"Rezervasyonunuz başarıyla oluşturuldu! Tarih: {reservation.StartTime:dd.MM.yyyy}.";
+            //after reservtion we show it is okey
 
             var seat = _context.Seats.First(s => s.Id == seatId);
             return RedirectToAction("Details", "Hall", new { id = seat.HallId });
         }
-
-
-
     }
 }

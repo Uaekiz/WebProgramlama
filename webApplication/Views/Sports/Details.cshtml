@@ -1,7 +1,7 @@
 @model webApplication.Models.Sport
 
 @{
-    ViewData["Title"] = @Model.Name + " Detayları";
+    ViewData["Title"] = @Model.Name + " Detayları";  //IT IS THE SAME THİNG WITH COURSES, SO I DIDNT MENTION AGAIN
 }
 
 <h1>@Model.Name</h1>
@@ -48,7 +48,6 @@
     <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
 
     @{
-        // Controller'dan gelen değeri alıyoruz
         bool isRegistered = ViewBag.IsUserRegistered ?? false;
     }
 

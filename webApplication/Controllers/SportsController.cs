@@ -9,9 +9,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace webApplication.Controllers
+namespace webApplication.Controllers //It is exactly the same thing with course controller,
+//  thats why I didnt feel the need to mention it again
 {
-     [NoCache]
+    [NoCache]
     public class SportsController : Controller
     {
 
@@ -21,11 +22,6 @@ namespace webApplication.Controllers
         {
             _context = context;
         }
-
-        // ----------------------------------------------------
-        // OKUMA (READ) AKSİYONLARI - DEĞİŞMEDİ
-        // ----------------------------------------------------
-
         public async Task<IActionResult> Listing()
         {
             var sports = await _context.Sports.ToListAsync();
@@ -39,7 +35,6 @@ namespace webApplication.Controllers
                 return NotFound();
             }
 
-            // DaysOffered bilgisini görmek için de kullanışlıdır
             var sport = await _context.Sports.FirstOrDefaultAsync(m => m.Id == id);
 
             if (sport == null)
@@ -48,7 +43,6 @@ namespace webApplication.Controllers
             }
             bool isUserRegistered = false;
     
-    // Kullanıcının giriş yapıp yapmadığını kontrol ediyoruz
             if (User.Identity.IsAuthenticated)
             {
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -57,41 +51,26 @@ namespace webApplication.Controllers
                 .AnyAsync(r => r.SportId == sport.Id && r.UserId == currentUserId);
             }
 
-            // Sonucu View'a iletiyoruz
             ViewBag.IsUserRegistered = isUserRegistered;
             return View(sport);
         }
 
-        // ----------------------------------------------------
-        // KAYIT FORMU (GET) - SPORT ID'SİNİ ALACAK ŞEKİLDE GÜNCELLENDİ
-        // ----------------------------------------------------
-
-        // GET: /Sports/Form/{id} -> Detay sayfasından gelen Sport ID'sini yakalar
         [Authorize]
         [NoCache]
         public IActionResult Form(int? id)
         {
             if (id == null || id == 0)
             {
-                // ID gelmezse listeye geri yönlendir.
                 return RedirectToAction(nameof(Listing));
             }
 
-            // View'a, SportRegistration modelini gönderirken SportId'yi içine yerleştiriyoruz.
-            // Bu, formda gizli alandan geri gönderilecek olan kritik bilgidir.
             var registration = new SportRegistration { SportId = id.Value };
 
-            // View, artık bu SportRegistration nesnesini model olarak kullanacak.
             return View(registration);
         }
 
-        // ----------------------------------------------------
-        // KAYIT OLUŞTURMA (CREATE) - KONTENJAN KONTROLÜ EKLENDİ
-        // ----------------------------------------------------
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // Bind kısmından "ApplicantName"i çıkardım
         public async Task<IActionResult> Create([Bind("SportId,SelectedDay")] SportRegistration registration)
         {
             registration.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -138,10 +117,6 @@ namespace webApplication.Controllers
 
             return View("Form", registration);
         }
-
-        // ----------------------------------------------------
-        // ONAY SAYFASI
-        // ----------------------------------------------------
 
         public IActionResult Sent_Signing()
         {

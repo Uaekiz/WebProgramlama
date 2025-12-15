@@ -2,17 +2,15 @@ namespace webApplication.Models
 {
     public class Seat
     {
-        public int Id { get; set; }
+        public int Id { get; set; } //This is PK
 
-        public int SeatNumber { get; set; }    // 1, 2, 3, ... (20 masa)
+        public int SeatNumber { get; set; }
 
-        // Available, InUse, Broken
         public string Status { get; set; } = "Available";
 
-        // FK
-        public int HallId { get; set; }
-        public Hall Hall { get; set; }
+        public int HallId { get; set; } //This is FK
+        public Hall Hall { get; set; } //and again helping ef
 
-        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>(); //It saves the all old reservations
     }
 }

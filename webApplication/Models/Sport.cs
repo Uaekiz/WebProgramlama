@@ -1,5 +1,5 @@
 
-using System.ComponentModel.DataAnnotations.Schema; // [Column] özniteliği için
+using System.ComponentModel.DataAnnotations.Schema;
 namespace webApplication.Models
 
 {
@@ -7,7 +7,7 @@ namespace webApplication.Models
     {
         public int Id {get; set;}
         public string ?Name {get; set;}
-        [Column("Capasity")]
+        [Column("Capasity")] //same thing 
         public int Capacity {get; set;}
         public DateTime Date {get; set;}
         public string ?Location {get; set;}

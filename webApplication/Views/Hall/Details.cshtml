@@ -1,7 +1,7 @@
 @model webApplication.Models.Hall
 
 @{
-    var reservations = ViewBag.Reservations as List<webApplication.Models.Reservation>;
+    var reservations = ViewBag.Reservations as List<webApplication.Models.Reservation>; //we create the list and confirm the filter
     DateTime? selectedStart = ViewBag.SelectedStart;
     DateTime? selectedEnd = ViewBag.SelectedEnd;
     bool filterApplied = ViewBag.FilterApplied ?? false;
@@ -11,18 +11,14 @@
     .seat-grid {
         display: grid;
         grid-template-columns: repeat(5, 70px);
-        /* koltuklar küçüldü */
         gap: 18px;
-        /* aralar daha sıkı */
         justify-content: center;
         margin-top: 30px;
     }
 
     .seat {
         width: 50px;
-        /* Daha küçük */
         height: 50px;
-        /* Daha ince uzun */
         border-radius: 18px;
         padding-top: 18px;
         font-size: 20px;
@@ -83,9 +79,7 @@
 
     .table-row {
         grid-column: 1 / -1;
-        /* tüm satırı kaplasın */
         height: 45px;
-        /* daha kalın masa */
         background: linear-gradient(#dcdcdc, #bfbfbf);
         border-radius: 8px;
         margin: 12px 0 22px 0;
@@ -94,37 +88,25 @@
             inset 0 2px 4px rgba(255, 255, 255, 0.5),
             inset 0 -3px 6px rgba(0, 0, 0, 0.25),
             0 4px 10px rgba(0, 0, 0, 0.25);
-        /* gerçek masa efekti */
     }
 
     .info-box {
         background: #162533;
-        /* İstenen koyu arka plan rengi */
         padding: 15px;
         border-radius: 10px;
         border-left: none;
-        /* Mavi kenarlık kaldırıldı */
         border: 1px solid rgba(255, 255, 255, 0.1);
-        /* Hafif beyaz çerçeve */
         color: #ffffff;
-        /* Yazı rengi beyaz */
         font-size: 16px;
         margin-bottom: 20px;
     }
 
     .info-box strong {
         color: #e95d2c;
-        /* Vurgulu kelimeleri sarı yapalım */
     }
 
-    /* ---------------------------------------------------- */
-    /* FİLTRELE BUTONU İÇİN STİL */
-    /* ---------------------------------------------------- */
-
-    /* Filtrele butonu için genel stil */
     .btn-filtrele-turuncu {
         background-color: #e95d2c !important;
-        /* İstenen Ana Rengi Uygula */
         border-color: #e95d2c !important;
         color: #ffffff !important;
         font-weight: bold;
@@ -133,12 +115,10 @@
 
     .btn-filtrele-turuncu:hover {
         background-color: #a63e1b !important;
-        /* İstenen Hover Rengi */
         border-color: #a63e1b !important;
         color: #ffffff !important;
     }
 
-    /* Başlıklar ve Form Etiketleri */
     h2,
     label {
         color: #ffffff;
@@ -146,7 +126,6 @@
 
     select.form-control {
         height: 45px;
-        /* Diğer kutularla aynı yükseklik */
         border-radius: 5px;
         cursor: pointer;
     }
@@ -156,6 +135,7 @@
 
 @if (DateTime.Now.Hour >= 23)
 {
+    //if it is after 23.00 it is closed so user cant choose a time after that time
     <div class="alert alert-danger shadow-sm text-center border-0" style="background-color: #ffcccc; color: #cc0000;">
         <h5 class="mb-1"><i class="bi bi-moon-stars-fill"></i> Rezervasyon Saati Doldu</h5>
         <p class="mb-0">
@@ -168,12 +148,11 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
+    //for success messsage
     <div class="alert alert-success" style="font-size:16px; padding:12px;">
         @TempData["SuccessMessage"]
     </div>
-
-    @* Başarılı rezervasyon sonrası form + koltuklar gösterilmesin *@
-    return;
+    return; //dont continue
 }
 
 
@@ -194,11 +173,9 @@
         <label>Tarih seçiniz</label>
         <select name="date" class="form-control" onchange="this.form.submit()">
             @{
-                // Bugün ve Yarın'ın string değerlerini alalım
-                string bugun = DateTime.Today.ToString("yyyy-MM-dd");
+                string bugun = DateTime.Today.ToString("yyyy-MM-dd"); //we are formatting todays and tomorrows dates as strings in yyyy-MM-dd format
                 string yarin = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd");
 
-                // Controller'dan gelen seçili tarih bilgisini alalım
                 string secilenTarih = ViewBag.SelectedDateString as string;
             }
 
@@ -218,27 +195,19 @@
             <option value="">Saat Seçiniz</option>
 
             @{
-                // Seçilen tarihi al (Eğer boşsa varsayılan Bugün'dür)
-                // Not: Controller'dan gelen SelectedDateString'i kullanıyoruz
                 string urlTarih = ViewBag.SelectedDateString as string ?? DateTime.Today.ToString("yyyy-MM-dd");
 
-                // Seçilen tarih BUGÜN mü?
                 bool bugunMu = (urlTarih == DateTime.Today.ToString("yyyy-MM-dd"));
 
-                // Şu anki saati al (Örn: 14:30 ise 14 alır)
                 int suankiSaat = DateTime.Now.Hour;
             }
 
-            @for (int i = 9; i < 24; i++)
+            @for (int i = 9; i < 24; i++) //it is for the list the hours between 9 an 24
             {
-                // --- KRİTİK NOKTA ---
-                // Eğer tarih bugünse VE döngüdeki saat şu anki saatten küçük veya eşitse
-                // O saati LİSTELEME (continue diyerek pas geç)
                 if (bugunMu && i <= suankiSaat)
                 {
                     continue;
                 }
-                // --------------------
 
                 string saat = i.ToString("00") + ":00";
                 string secilenSaat = ViewBag.SelectedStartString as string;
@@ -268,7 +237,7 @@
             int index = 0;
         }
 
-        @foreach (var seat in Model.Seats)
+        @foreach (var seat in Model.Seats) //this loop for the show seats
         {
             index++;
 
@@ -283,12 +252,12 @@
                 );
             }
 
-            string cssClass = isReserved ? "seat reserved" : "seat available";
+            string cssClass = isReserved ? "seat reserved" : "seat available"; //for red or green colour which is needed to understand empty or reserved and under the long string for create function
             string message = isReserved ? "Bu saat aralığında dolu" : "Rezerve etmek için tıklayın";
 
             <div class="@cssClass" title="@message"
                 onclick="@(isReserved ? "" :
-                                                     $"window.location='/Reservation/Create?seatId={seat.Id}&date={selectedStart?.ToString("yyyy-MM-dd")}&startTime={selectedStart?.ToString("HH:mm")}&endTime={selectedEnd?.ToString("HH:mm")}'")">
+                                         $"window.location='/Reservation/Create?seatId={seat.Id}&date={selectedStart?.ToString("yyyy-MM-dd")}&startTime={selectedStart?.ToString("HH:mm")}&endTime={selectedEnd?.ToString("HH:mm")}'")">
                 @seat.SeatNumber
             </div>
 
@@ -303,27 +272,21 @@
 
 @section Scripts {
     <script>
+        //this script is needed to otomaticly assing the finish time one hour later after start time
         document.getElementById("startTime").addEventListener("change", function () {
-            // Seçilen değeri al (Örn: "14:00")
             let secilenSaat = this.value;
 
             if (secilenSaat) {
-                // Sadece saati (ilk iki hane) al ve sayıya çevir. Örn: 14
                 let saatSayisi = parseInt(secilenSaat.substring(0, 2));
 
-                // 1 saat ekle
                 let bitisSaati = saatSayisi + 1;
 
-                // Eğer 24 olduysa 00 yap (Gece yarısı döngüsü)
                 if (bitisSaati === 24) bitisSaati = 0;
 
-                // Formatı ayarla (Tek haneli ise başına 0 koy) -> "09:00" veya "15:00"
                 let formatliBitis = bitisSaati.toString().padStart(2, '0') + ":00";
 
-                // Bitiş kutusuna yaz
                 document.getElementById("endTime").value = formatliBitis;
             } else {
-                // Seçim iptal edilirse kutuyu boşalt
                 document.getElementById("endTime").value = "";
             }
         });
