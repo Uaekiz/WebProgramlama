@@ -1,8 +1,8 @@
 @model webApplication.Models.User
+@* we should have the user to show *@
 
 @{
-    ViewData["Title"] = "Profilim";
-    // Başarı mesajı varsa gösterelim
+    ViewData["Title"] = "Profilim"; //it is for succes message
     if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success">@TempData["SuccessMessage"]</div>
@@ -56,7 +56,7 @@
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white p-0 border-bottom-0">
-                    <ul class="nav nav-pills p-2" id="profileTabs" role="tablist"> 
+                    <ul class="nav nav-pills p-2" id="profileTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active fw-bold px-4" id="reservations-tab" data-bs-toggle="pill"
                                 data-bs-target="#reservations" type="button" role="tab">
@@ -83,7 +83,6 @@
                                 <div class="list-group">
                                     @foreach (var item in Model.Reservations)
                                     {
-                                        // Tarih kontrolü: Geçmiş mi Gelecek mi?
                                         bool isFuture = item.StartTime > DateTime.Now;
                                         string itemClass = isFuture ? "list-group-item-light border-primary" :
                                         "list-group-item-secondary text-muted";
@@ -206,7 +205,6 @@
                             {
                                 <p class="text-muted small">Kurs başvurusu yok.</p>
                             }
-
                         </div>
                     </div>
                 </div>
@@ -217,15 +215,14 @@
 
 @section Scripts {
     <script>
-        // Sayfa tarayıcı geçmişinden (Back tuşuyla) geliyorsa yakala
-        window.addEventListener( "pageshow", function ( event ) {
-            var historyTraversal = event.persisted || 
-                                   ( typeof window.performance != "undefined" && 
-                                     window.performance.navigation.type === 2 );
-            
-            if ( historyTraversal ) {
-                // Eğer geri tuşuyla gelindiyse sayfayı zorla yenile.
-                // Sayfa yenilenince sunucu oturumun kapalı olduğunu anlayıp Login'e atacak.
+        // with this script, we prevent back funciton to enter the last loout person information
+        window.addEventListener("pageshow", function (event) {
+            var historyTraversal = event.persisted ||
+                (typeof window.performance != "undefined" &&
+                    window.performance.navigation.type === 2);
+
+            if (historyTraversal) {
+                // we refresh the page, so help dotnet again enter the last user
                 window.location.reload();
             }
         });

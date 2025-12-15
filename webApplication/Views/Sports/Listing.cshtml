@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "1. Kat Spor Faaliyetleri Listesi";
-    // Renklerin sırayla değişmesi için sayaç değişkeni (Koyudan Açığa)
     int sayac = 0;
 }
 
@@ -14,8 +13,6 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            // Modülo işlemi: Sayacı 8'e böler ve kalanı alır (0'dan 7'ye 8 renk var).
-            // Bu, koyu renkten açık renge doğru bir gradyan geçişi sağlar.
             var renkSinifi = "card-renk-" + (sayac % 8);
 
             <div class="col-12 mb-4"> 
@@ -56,18 +53,11 @@
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm">
                                 Detaylar
                             </a>
-                            
-                            @* Kayıt ol butonu *@
-                            @* <a asp-action="Form" asp-route-id="@item.Id" class="btn btn-sm ms-2">
-                                Kaydol
-                            </a> *@
                         </div>
 
                     </div>
                 </div>
             </div>
-
-            // Bir sonraki kart için sayacı artır
             sayac++;
         }
     </div>

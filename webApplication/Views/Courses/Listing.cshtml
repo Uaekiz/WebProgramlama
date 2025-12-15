@@ -1,8 +1,7 @@
 @model IEnumerable<webApplication.Models.Course>
 
 @{
-    ViewData["Title"] = "2. Kat Kurs Listesi";
-    // Renklerin sırayla değişmesi için sayaç değişkeni
+    ViewData["Title"] = "2. Kat Kurs Listesi"; //for changing the colour
     int sayac = 0;
 }
 
@@ -14,7 +13,6 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            // DÜZELTME: Modülo işlemi 8 üzerinden (0'dan 7'ye 8 renk var)
             var renkSinifi = "card-renk-" + (sayac % 8);
 
             <div class="col-12 mb-4"> 
@@ -41,8 +39,6 @@
                     </div>
                 </div>
             </div>
-
-            // Sayacı artır
             sayac++;
         }
     </div>

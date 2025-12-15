@@ -11,30 +11,26 @@ using System.Threading.Tasks;
 
 namespace webApplication.Controllers
 {
-    [NoCache]
+    [NoCache]//this is the filters key which I mentioned
     public class CoursesController : Controller
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context; //It is our database object that we can do CRUD
 
-        public CoursesController(ApplicationDbContext context)
+        public CoursesController(ApplicationDbContext context) // we start the database object with constructor
         {
             _context = context;
         }
 
-        // ----------------------------------------------------
-        // OKUMA (READ) AKSİYONLARI - KURS LİSTELEME
-        // ----------------------------------------------------
-
-        public async Task<IActionResult> Listing()
+        public async Task<IActionResult> Listing() // for listing the courses, we need a list
         {
             var courses = await _context.Courses.ToListAsync();
-            return View(courses);
+            return View(courses); //it return the list
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id) //this action for detatils of the course
         {
-            if (id == null)
+            if (id == null) 
             {
                 return NotFound();
             }
@@ -44,12 +40,11 @@ namespace webApplication.Controllers
             if (course == null)
             {
                 return NotFound();
-            }
+            } //until here we ckecked, courses are okey or not
 
             bool isUserRegistered = false;
     
-            // Kullanıcının giriş yapıp yapmadığını kontrol ediyoruz
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated) //if user logs in 
             {
                 
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -60,56 +55,42 @@ namespace webApplication.Controllers
             }
 
             
-            ViewBag.IsUserRegistered = isUserRegistered;
+            ViewBag.IsUserRegistered = isUserRegistered; //we send this because if they dont log in before sellecting date, 
+            // they must log the website
             return View(course);
         }
 
-        // ----------------------------------------------------
-        // KAYIT FORMU (GET) - KURS ID'SİNİ ALACAK ŞEKİLDE GÜNCELLENDİ
-        // ----------------------------------------------------
-        // CoursesController.cs
-        // ...
-        // GET: /Courses/Form/{id} -> Detay sayfasından gelen Course ID'sini yakalar
-        [Authorize]
+        [Authorize] //for form section they must be authorize, so we add this key
         [NoCache]
-        public IActionResult Form(int? id)
+        public IActionResult Form(int? id)//it create the form but it knows which course it is
         {
             if (id == null || id == 0)
             {
                 return RedirectToAction(nameof(Listing));
             }
 
-            // View'a, CourseRegistration modelini gönderirken CourseId'yi içine yerleştiriyoruz.
             var registration = new CourseRegistration { CourseId = id.Value };
 
             return View(registration);
         }
-        // ...
-        // ----------------------------------------------------
-        // KAYIT OLUŞTURMA (CREATE) - KONTENJAN KONTROLÜ EKLENDİ
-        // ----------------------------------------------------
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        // Bind kısmından "ApplicantName"i çıkardım
+        [ValidateAntiForgeryToken] //security 
         public async Task<IActionResult> Create([Bind("CourseId,SelectedDay")] CourseRegistration registration)
         {
-            // Giriş yapan kullanıcının ID'sini ata
-            registration.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            registration.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier); //we pull id because it is bad that 
+            // directly users enter their ids 
 
-            // UserId boş ise (Kullanıcı giriş yapmamışsa) Login'e gönder
             if (string.IsNullOrEmpty(registration.UserId))
             {
                 return Redirect("/Identity/Account/Login");
             }
 
-            // ModelState kontrolünü yaparken "ApplicantName" hatasını temizle (Çünkü artık modelde o yok ama eski cache kalmış olabilir)
             ModelState.Remove("UserId");
             ModelState.Remove("User");
 
             if (ModelState.IsValid)
             {
-                // 1. KONTENJAN KONTROLÜ
                 var courseDetails = await _context.Courses
                     .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.Id == registration.CourseId);
@@ -129,14 +110,13 @@ namespace webApplication.Controllers
                     return View("Form", registration);
                 }
 
-                // 2. KAYIT İŞLEMİ
                 registration.RegistrationDate = DateTime.Now;
                 registration.Status = "Onay Bekliyor";
 
                 _context.Add(registration);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Sent_Signing));
+                return RedirectToAction(nameof(Sent_Signing)); //everythins is okey we direct them to signing page
             }
 
             return View("Form", registration);

@@ -7,42 +7,36 @@ using webApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); // we connecting database
 
-// Servisleri ekle
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();  //VC of MVC 
 
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>(); //Adding our fake email server
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(connectionString));// we are saying we are gonna use SQLite
 
-builder.Services.AddIdentity<User, IdentityRole>(options =>
+builder.Services.AddIdentity<User, IdentityRole>(options => //here are the rules of password, we kept them simple because of this is a school project
 {
-    // İsterseniz şifre kurallarını buradan gevşetebilirsiniz (Geliştirme aşaması için)
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 3;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddEntityFrameworkStores<ApplicationDbContext>() //we should add them because of identify package
 .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.ConfigureApplicationCookie(options => //If the user hasnt logged in, it directs the user 
 {
     options.LoginPath = "/Identity/Account/Login";
     options.LogoutPath = "/Identity/Account/Logout";
 });
 
-// Identity UI sayfaları (Login/Register) için bunu eklemelisiniz:
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages();//Identify's views use razor so we added its service
 
 var app = builder.Build();
 
-// ... (Data seeding kısmını sildiğinizi varsayıyorum) ...
-
-// HTTP request pipeline yapılandırması
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -50,20 +44,19 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
+app.UseRouting();   //these are security that when you connect it to a server
 
-// Kimlik doğrulama sıralaması önemlidir:
-app.UseAuthentication(); // 1. Kimsin?
-app.UseAuthorization();  // 2. Yetkin var mı?
 
-app.MapStaticAssets();
+app.UseAuthentication();  //it is who are you
+app.UseAuthorization();  //and this can you have the permission to access
+
+app.MapStaticAssets();  //the speed of dowlanding css and js file 
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Login/Register sayfalarının rotalarını ekle:
-app.MapRazorPages();
+app.MapRazorPages(); //reminding
 
 app.Run();

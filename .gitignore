@@ -5,10 +5,3 @@
 # User-specific files
 *.user
 *.suo
-
-# SQLite database files
-*.db
-*.db-shm
-*.db-wal
-*.db-journal
-#deneme

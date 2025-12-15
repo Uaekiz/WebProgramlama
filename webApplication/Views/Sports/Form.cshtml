@@ -1,35 +1,29 @@
-@model webApplication.Models.SportRegistration // Artık Kayıt modelini kullanıyoruz
+@model webApplication.Models.SportRegistration 
 @inject webApplication.Data.ApplicationDbContext Context // DbContext'i View'a enjekte ediyoruz
 
 @{
     ViewData["Title"] = "Spor Başvuru Formu";
 
-    // 1. Kaydolunacak Sporun ID'sini RouteData'dan al. Controller'dan da gelmiş olabilir.
     int sportId = Model.SportId > 0 ? Model.SportId : int.Parse(ViewContext.RouteData.Values["id"]?.ToString() ?? "0");
 
-    // Modelin SportId'si boş gelirse, route'dan aldığımız değeri ata.
     if (Model.SportId == 0) Model.SportId = sportId;
 
-    // 2. O Sporun detaylarını (DaysOffered) veritabanından çek.
     var sportDetails = Context.Sports.FirstOrDefault(s => s.Id == sportId);
 
-    // Eğer detaylar yoksa veya gün bilgisi eksikse hata mesajı
     if (sportDetails == null)
     {
         ViewData["ErrorMessage"] = "Kayıt formu geçersiz. Lütfen listeden spor seçimi yapın.";
     }
 
-    // Günleri ayır (Örn: "Pazartesi,Çarşamba" -> ["Pazartesi", "Çarşamba"])
     var availableDays = sportDetails?.DaysOffered?.Split(',')
     .Select(d => d.Trim())
-    .Where(d => !string.IsNullOrWhiteSpace(d)) // Boş girişleri temizle
+    .Where(d => !string.IsNullOrWhiteSpace(d)) 
     .ToList() ?? new List<string>();
 }
 
 <h1>Spor Faaliyeti Kaydı: @(sportDetails?.Name ?? "Bilinmiyor")</h1>
 <hr />
 
-@* Controller'dan gelen tüm hataları (ModelState.AddModelError) burada gösteriyoruz *@
 <div asp-validation-summary="All" class="text-danger"></div>
 
 @if (ViewData["ErrorMessage"] != null)

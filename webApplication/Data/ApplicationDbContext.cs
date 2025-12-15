@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using webApplication.Models; // BU SATIR ZATEN MEVCUTTU VE DOĞRUYDU.
+using webApplication.Models;
 
 namespace webApplication.Data;
 
@@ -11,7 +11,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     {
     }
 
-    public DbSet<Course> Courses { get; set; }
+    public DbSet<Course> Courses { get; set; } //These are our tables which are shown in database and we process with the data 
     public DbSet<Sport> Sports { get; set; }
     
     public DbSet<Hall> Halls { get; set; }

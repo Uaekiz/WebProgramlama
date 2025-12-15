@@ -1,27 +1,25 @@
 @model IEnumerable<webApplication.Models.Hall>
 
 <style>
-    /* Başlık Stil ve Renk (Beyaz ve Altın Çizgi) */
     .page-title {
         text-align: center;
         font-size: 32px;
         font-weight: bold;
         margin-top: 20px;
         position: relative;
-        color: #ffffff !important; 
+        color: #ffffff !important;
     }
 
     .page-title::after {
         content: "";
         width: 80px;
         height: 4px;
-        background: #e95d2c; /* Vurgu rengi */
+        background: #e95d2c;
         display: block;
         margin: 10px auto 0;
         border-radius: 5px;
     }
 
-    /* Kapsayıcı */
     .hall-container {
         display: flex;
         gap: 25px;
@@ -31,20 +29,18 @@
         padding-bottom: 50px;
     }
 
-    /* KARTLARIN TEMEL STİLİ (Tek Renk: #162533) */
     .hall-card {
         width: 260px;
         padding: 22px;
         border-radius: 18px;
-        /* İstenen Tek Renk */
-        background: #162533; 
+        background: #162533;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
         text-align: center;
         position: relative;
         overflow: hidden;
-        color: #ffffff; /* Tüm kart içeriği beyaz olsun */
+        color: #ffffff;
     }
 
     .hall-card:hover {
@@ -52,17 +48,16 @@
         box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
     }
 
-    /* İKONLAR (Font Awesome İkonları için stil) */
     .hall-icon {
         font-size: 48px;
         margin-bottom: 12px;
-        color: #b0cee2; /* İkon rengini vurgu sarısı yap */
+        color: #b0cee2;
         filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
     }
 
     .hall-title {
         font-size: 22px;
-        color: #ffffff; /* Başlıklar Beyaz */
+        color: #ffffff;
         font-weight: bold;
         margin-bottom: 8px;
     }
@@ -81,19 +76,18 @@
         color: #ddd;
         margin-bottom: 15px;
     }
-    
+
     .hall-info strong {
         color: #ffffff;
     }
 
-    /* BUTON STİLİ (İstenen Turuncu Renk) */
     .select-btn {
         margin-top: 5px;
         padding: 10px 20px;
         border-radius: 10px;
         font-size: 16px;
         width: 140px;
-        background-color: #e95d2c; /* İstenen Buton Rengi */
+        background-color: #e95d2c;
         border: none;
         color: #ffffff;
         font-weight: bold;
@@ -101,11 +95,10 @@
     }
 
     .select-btn:hover {
-        background-color: #a63e1b; /* İstenen Hover Rengi */
+        background-color: #a63e1b;
         color: #ffffff;
     }
 
-    /* Giriş Metni (Library Hero) */
     .library-hero {
         text-align: center;
         margin-top: 40px;
@@ -113,7 +106,8 @@
         padding: 20px;
     }
 
-    .library-hero h1, .library-hero p {
+    .library-hero h1,
+    .library-hero p {
         color: #ffffff !important;
     }
 </style>
@@ -121,11 +115,11 @@
 <div class="library-hero">
 
     <p>
-       Kütüphanemiz 7/24 açık olup; PC Salonu,
+        Kütüphanemiz 7/24 açık olup; PC Salonu,
         Çalışma Salonu ve Okuma Salonu ile öğrencilere
         konforlu ve verimli çalışma alanları sunmaktadır.
 
-       
+
 
     </p>
 </div>
@@ -136,13 +130,14 @@
 
     @foreach (var hall in Model)
     {
-        // YENİ: Font Awesome ikonları (fas fa-...) kullanıldı
-        string iconClass = hall.Type switch
+        //this loop is neccesary for the show all halls
+
+        string iconClass = hall.Type switch //thats switch wit their type
         {
-            "Computer" => "fas fa-laptop-code", // Bilgisayar Salonu
-            "Study" => "fas fa-graduation-cap", // Çalışma Salonu (Mezuniyet şapkası/Öğrenme)
-            "Library" => "fas fa-book-open",    // Okuma Salonu
-            _ => "fas fa-building"              // Varsayılan
+            "Computer" => "fas fa-laptop-code",
+            "Study" => "fas fa-graduation-cap",
+            "Library" => "fas fa-book-open",
+            _ => "fas fa-building"
         };
 
         <div class="hall-card">

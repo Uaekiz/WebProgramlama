@@ -5,14 +5,13 @@ namespace webApplication.Models
 {
     public class CourseRegistration
     {
-        public int Id { get; set; } 
-        public int CourseId { get; set; } 
+        public int Id { get; set; } //PK
+        public int CourseId { get; set; } //Fk
         public Course? Course { get; set; }
-
-        public string UserId { get; set; }
+        public string UserId { get; set; } //FK
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User User { get; set; } //ef
 
         [Required(ErrorMessage = "Lütfen ders gününü seçiniz.")]
         public string SelectedDay { get; set; }   
