@@ -1,0 +1,67 @@
+@model webApplication.Models.Sport
+
+@{
+    ViewData["Title"] = @Model.Name + " Detayları";  //IT IS THE SAME THİNG WITH COURSES, SO I DIDNT MENTION AGAIN
+}
+
+<h1>@Model.Name</h1>
+<hr />
+
+@if (!string.IsNullOrEmpty(Model.ImageUrl))
+{
+    <div class="mb-4">
+        <img src="@Model.ImageUrl" alt="@Model.Name Görseli" class="img-fluid rounded shadow-sm" style="max-height: 400px; width: 100%; object-fit: cover;">
+    </div>
+}
+<div>
+    <h4>Spor Faaliyeti Tanıtımı ve Detayları (1. Kat)</h4>
+    <dl class="row">
+        
+        <dt class="col-sm-3">Kurs Adı</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+    <dt class="col-sm-3">Açıklama</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.info)</dd> 
+    
+    <dt class="col-sm-3">Sunulan Günler</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.DaysOffered)</dd>
+    
+    <dt class="col-sm-3">Kontenjan</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Capacity)</dd>
+    
+    <dt class="col-sm-3">Başlangıç Tarihi</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Date)</dd>
+    
+    <dt class="col-sm-3">Konum</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Location)</dd>
+    
+    <dt class="col-sm-3">Eğitmen</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Trainer)</dd>
+    
+    <dt class="col-sm-3">Yaş Limiti</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(model => model.Age_Limit)</dd>
+        
+    </dl>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Listing" class="btn btn-secondary">Spor Listesine Geri Dön</a>
+
+    @{
+        bool isRegistered = ViewBag.IsUserRegistered ?? false;
+    }
+
+    @if (isRegistered)
+    {
+        <button class="btn btn-secondary float-end" disabled>
+            Zaten Kaydınız Var 
+        </button>
+    }
+    else
+    {
+        <a asp-action="Form" asp-route-id="@Model.Id" class="btn btn-success float-end">
+            Bu Spora Kaydol
+        </a>
+    }
+
+</div>

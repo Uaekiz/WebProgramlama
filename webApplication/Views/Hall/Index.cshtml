@@ -1,0 +1,161 @@
+@model IEnumerable<webApplication.Models.Hall>
+
+<style>
+    .page-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        margin-top: 20px;
+        position: relative;
+        color: #ffffff !important;
+    }
+
+    .page-title::after {
+        content: "";
+        width: 80px;
+        height: 4px;
+        background: #e95d2c;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 5px;
+    }
+
+    .hall-container {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+        padding-bottom: 50px;
+    }
+
+    .hall-card {
+        width: 260px;
+        padding: 22px;
+        border-radius: 18px;
+        background: #162533;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+    }
+
+    .hall-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+    }
+
+    .hall-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        color: #b0cee2;
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+    }
+
+    .hall-title {
+        font-size: 22px;
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .hall-description p {
+        font-size: 15px;
+        color: #ccc;
+        line-height: 1.35;
+        height: 58px;
+        margin-bottom: 8px;
+    }
+
+    .hall-info {
+        font-size: 16px;
+        font-weight: 500;
+        color: #ddd;
+        margin-bottom: 15px;
+    }
+
+    .hall-info strong {
+        color: #ffffff;
+    }
+
+    .select-btn {
+        margin-top: 5px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        width: 140px;
+        background-color: #e95d2c;
+        border: none;
+        color: #ffffff;
+        font-weight: bold;
+        transition: background-color 0.25s ease;
+    }
+
+    .select-btn:hover {
+        background-color: #a63e1b;
+        color: #ffffff;
+    }
+
+    .library-hero {
+        text-align: center;
+        margin-top: 40px;
+        margin-bottom: 25px;
+        padding: 20px;
+    }
+
+    .library-hero h1,
+    .library-hero p {
+        color: #ffffff !important;
+    }
+</style>
+
+<div class="library-hero">
+
+    <p>
+        Kütüphanemiz 7/24 açık olup; PC Salonu,
+        Çalışma Salonu ve Okuma Salonu ile öğrencilere
+        konforlu ve verimli çalışma alanları sunmaktadır.
+
+
+
+    </p>
+</div>
+
+<h2 class="page-title">Lütfen bir salon seçin</h2>
+
+<div class="hall-container">
+
+    @foreach (var hall in Model)
+    {
+        //this loop is neccesary for the show all halls
+
+        string iconClass = hall.Type switch //thats switch wit their type
+        {
+            "Computer" => "fas fa-laptop-code",
+            "Study" => "fas fa-graduation-cap",
+            "Library" => "fas fa-book-open",
+            _ => "fas fa-building"
+        };
+
+        <div class="hall-card">
+            <div class="hall-icon"><i class="@iconClass"></i></div>
+
+            <div class="hall-title">@hall.Name</div>
+
+            <div class="hall-description">
+                <p>@hall.Description</p>
+            </div>
+
+
+            <div class="hall-info">Koltuk sayısı: <strong>@hall.SeatCount</strong></div>
+
+            <a class="btn btn-primary select-btn" href="/Hall/Details/@hall.Id">
+                Seçiniz
+            </a>
+        </div>
+    }
+
+</div>

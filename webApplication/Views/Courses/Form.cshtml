@@ -1,0 +1,77 @@
+@model webApplication.Models.CourseRegistration 
+@inject webApplication.Data.ApplicationDbContext Context // DbContext'i View'a enjekte ediyoruz
+
+@{
+    ViewData["Title"] = "Kurs Başvuru Formu";
+    //we pull the user
+    int courseId = Model.CourseId > 0 ? Model.CourseId : int.Parse(ViewContext.RouteData.Values["id"]?.ToString() ?? "0");
+    
+
+    if (Model.CourseId == 0) Model.CourseId = courseId;
+
+    var courseDetails = Context.Courses.FirstOrDefault(c => c.Id == courseId);
+
+    if (courseDetails == null)
+    {
+        ViewData["ErrorMessage"] = "Kayıt formu geçersiz. Lütfen listeden kurs seçimi yapın.";
+    }
+    //the format of keeping data about days string which is seperated wit a "," so we split them
+    var availableDays = courseDetails?.DaysOffered?.Split(',')
+        .Select(d => d.Trim())
+        .Where(d => !string.IsNullOrWhiteSpace(d)) 
+        .ToList() ?? new List<string>();
+}
+
+<h1>Kurs Faaliyeti Kaydı: @(courseDetails?.Name ?? "Bilinmiyor")</h1>
+<hr />
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                
+              <input type="hidden" asp-for="CourseId" />
+
+                <div class="form-group mb-4">
+                    <label asp-for="SelectedDay" class="control-label">Tercih Edilen Ders Günü (Zorunlu)</label>
+                    
+                    @if (availableDays.Any())
+                    {
+                        @foreach (var day in availableDays)
+                        {
+                            //shown avaliable days
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" asp-for="SelectedDay" value="@day" id="day_@day">
+                                <label class="form-check-label" for="day_@day">@day</label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-warning">Bu kurs için ders günü bilgisi bulunamadı.</p>
+                    }
+                    <span asp-validation-for="SelectedDay" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+    <input type="submit" value="Kaydı Tamamla" class="btn btn-kayit-turuncu" />
+</div>
+            </form>
+        </div>
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-action="Listing" class="btn btn-secondary">Kurs Listesine Geri Dön</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

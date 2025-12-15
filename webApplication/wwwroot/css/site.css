@@ -1,31 +1,378 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #58697a;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    /* Eski arka plan rengini (muhtemelen beyaz) bu kodla değiştirin */
+    background: linear-gradient(to bottom, #9ba8bb 0%, #06141b 100%);
+    
+    /* Sayfanın tamamını kaplaması için minimum yüksekliği ayarlayın */
+    min-height: 100vh; 
+    color: #ffffff;
+    
+    /* Gerekli diğer stiller (margin, padding vb.) */
+    margin: 0;
+    /* BOŞLUĞUN KALDIRILDIĞI YER: Navbar zaten üste yapışık olduğu için bu padding'i kaldırdık/sıfırladık. */
+    padding-top: 120px; 
 }
 
+/* Dikkat: Sizin kodunuzda hatalı yazılmış 'navbar' seçicisi silindi.
+   Doğru seçici '.navbar' ile birleştirildi. */
+
+
+/* Sayfanın ana içeriğini barındıran div'in üst boşluğunu sıfırlar */
+.container {
+    /* Varsayılan margin-top veya padding-top varsa bunu sıfırlayın */
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* <main> etiketine uygulanan varsayılan boşlukları sıfırlar */
+main[role="main"] {
+    padding-top: 0 !important;
+}
+
+/*
+ * NAVİGASYON BAR (NAVBAR) STİLİ VE BOYUTU
+ * Tekrar eden .navbar blokları birleştirildi.
+ */
+.navbar {
+    /* Navbar'ın altındaki varsayılan boşluğu sıfırlar */
+    margin-bottom: 0 !important;
+    
+    /* Koyu Mavi (Navy Blue) */
+    background-color: #1A2730 !important; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    
+    /* Navbar'ın minimum yüksekliğini artırır */
+    min-height: 80px; 
+}
+
+/*
+ * NAVBAR İÇİNDEKİ TÜM LİNK VE BAŞLIK METİNLERİNİ DÜZENLEME
+ */
+.navbar .nav-link, 
+.navbar .navbar-brand {
+    /* Beyaz */
+    color: #ffffff !important; 
+    transition: color 0.3s ease; 
+}
+
+/* Navbar içindeki linklerin (ve diğer metinlerin) yeni yüksekliğe göre ortalanması */
+.navbar-nav .nav-item {
+    /* Bootstrap'in varsayılan padding değerini artırarak ortalamaya yardımcı olur */
+    padding-top: 10px; 
+    padding-bottom: 10px;
+}
+
+/*
+ * NAVBAR LİNK HOVER (ÜZERİNE GELİNCE) RENGİ
+ */
+.navbar .nav-link:hover {
+    /* Canlı sarı/altın rengi (vurgu) */
+    color: #ffd700 !important; 
+}
+
+/*
+ * AKTİF LİNK STİLİ
+ */
+.navbar .nav-item .nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid #ffd700;
+}
+
+.okunabilirlik-arkaplan {
+    /* Çok hafif gri/beyaz bir arka plan rengi */
+    background-color: rgba(255, 255, 255, 0.15); 
+    padding: 15px; /* Metin etrafında boşluk */
+    border-radius: 8px; /* Köşeleri yuvarlama */
+    color: #ffffff; /* Yazı rengini beyaz/açık tutar */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.row {
+    --bs-gutter-x: 0.5rem; 
+}
+
+/* 2. SÜTUN (COL) Ayarı: Dikey boşluğu azaltır */
+.col-md-4 {
+    padding-bottom: 0.5rem !important; 
+    padding-top: 0.5rem !important;
+}
+
+.card {
+    min-height: 500px; 
+    transition: transform 0.3s ease;
+    margin-bottom: 0.rem !important; /* Doğru: Nokta kullanıldı */
+}
+
+/* KARTLARA ÖZEL ARKA PLAN RENKLERİ */
+/* İsimler standartlaştırıldı: kat-bir, kat-iki, kat-uc */
+
+/* 1. KART (SPOR) */
+.card.kat-bir {
+    background-color: #11212d;
+    color: #ffffff;
+    border: none;
+}
+
+/* 2. KART (SOSYAL) */
+.card.kat-iki {
+    background-color: #253745; 
+    color: #1A2730; 
+    border: none;
+}
+
+/* 3. KART (EĞİTİM) */
+.card.kat-uc {
+    background-color: #4a5c6a;
+    color: #1A2730; 
+    border: none;
+}
+
+/* BAŞLIK RENKLERİ (Genel) */
+.card.kat-bir .card-title { color: #ffffff; }
+.card.kat-iki .card-title { color: #ffffff; }
+.card.kat-uc .card-title  { color: #ffffff; }
+
+/* METİN RENGİ (Okunabilirlik için) */
+.card-text {
+    color: #eee !important;
+}
+
+/* ---------------------------------------------------- */
+/* İKON VE H2 BAŞLIK RENKLERİ (Düzeltildi) */
+/* ---------------------------------------------------- */
+/* HATA BURADAYDI: .katman-bir yerine .kat-bir yazıldı */
+
+.card.kat-bir .fa-running,
+.card.kat-bir h2 {
+    color: #16a085 !important; 
+}
+
+.card.kat-iki .fa-gamepad,
+.card.kat-iki h2 {
+    color: #d35400 !important; /* Daha koyu turuncu/kiremit rengi kontrast için */
+}
+
+.card.kat-uc .fa-book-reader,
+.card.kat-uc h2 {
+    color: #c0392b !important; /* Koyu kırmızı/kahve tonu kontrast için */
+}
+
+.katman-btn {
+    border: none !important; /* Kenarlığı kaldır */
+    padding: 12px 30px; /* İç boşluk (Butonu şişirir) */
+    font-weight: bold; /* Yazıyı kalınlaştırır */
+    transition: all 0.3s ease; /* Hover efekti için yumuşak geçiş */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Hafif gölge */
+}
+
+/* BUTONLARIN ÜZERİNE GELİNCE (HOVER) */
+.katman-btn:hover {
+    transform: translateY(-3px); /* Butonu hafifçe yukarı kaydırır */
+    box-shadow: 0 6px 8px rgba(0,0,0,0.3); /* Gölgeyi büyütür */
+}
+
+/* ---------------------------------------------------- */
+/* RENKLER (Kart Temasına Göre) */
+/* ---------------------------------------------------- */
+
+/* 1. KAT (SPOR) BUTONU - Koyu Yeşil Tonu */
+.card.kat-bir .katman-btn {
+    background-color: #0e6655; 
+    color: #fff;
+}
+.card.kat-bir .katman-btn:hover {
+    background-color: #0b5345; /* Hover'da daha koyu */
+}
+
+/* 2. KAT (SOSYAL) BUTONU - Koyu Turuncu/Kahve Tonu */
+.card.kat-iki .katman-btn {
+    background-color: #d35400; 
+    color: #fff;
+}
+.card.kat-iki .katman-btn:hover {
+    background-color: #a04000; /* Hover'da daha koyu */
+}
+
+/* 3. KAT (EĞİTİM) BUTONU - Koyu Lacivert Tonu */
+.card.kat-uc .katman-btn {
+    background-color: #c0392b; 
+    color: #fff;
+}
+.card.kat-uc .katman-btn:hover {
+    background-color: #9d281b; /* Hover'da daha açık/farklı ton */
+}
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
+.footer {
+    position: relative !important; 
+    bottom: auto !important;
+    width: 100%;
+    margin-top: 50px;             
+    
+    /* ARKA PLAN ŞEFFAFLAŞTIRILDI */
+    background-color: transparent !important; 
+    
+    /* YAZI RENGİ GÜNCELLENDİ (Koyu arka plan üzerinde görünmesi için) */
+    color: #ffffff !important; /* Tüm yazı ve linkler için beyaz renk */
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* İnce beyaz ayırıcı çizgi */
+}
+
+/* Footer içindeki linklerin de beyaz/açık görünmesini sağlayalım */
+.footer a {
+    color: #ffffff !important;
+}
+
+/* Eğer body etiketinde varsayılan bir margin-bottom varsa onu sıfırlayalım */
+body {
+    margin-bottom: 0 !important;
+}
+
+/* LİSTELEME KARTLARI GENEL AYARI */
+.listing-card {
+    border: none;
+    border-radius: 10px; /* Köşeleri yuvarlatır */
+    margin-bottom: 20px; /* Kartlar arası alt boşluk */
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    min-height: 250px; /* Kartların eşit boyda durmasına yardımcı olur */
+}
+
+.listing-card:hover {
+    transform: translateY(-5px); /* Üzerine gelince hafif yukarı kalkar */
+}
+
+/* KART İÇİNDEKİ TÜM YAZILARI BEYAZ YAP */
+.listing-card h5, 
+.listing-card p, 
+.listing-card span, 
+.listing-card label {
+    color: #ffffff !important;
+}
+.card-renk-0 { background-color: #06141b; } /* Koyu */
+.card-renk-1 { background-color: #162533; }
+.card-renk-2 { background-color: #26364b; }
+.card-renk-3 { background-color: #374763; }
+.card-renk-4 { background-color: #47587b; }
+.card-renk-5 { background-color: #576993; }
+.card-renk-6 { background-color: #677aa8; }
+.card-renk-7 { background-color: #8193be; } /* Açık */
+/* KART BUTONU (Beyaz Çerçeveli) */
+.listing-card .btn {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.listing-card .btn:hover {
+    background-color: #ffffff;
+    color: #333; /* Hover olunca yazı koyu olsun */
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Ana içerik alanının kalan tüm boşluğu kaplamasını sağlar */
+main[role="main"] {
+    flex-grow: 1;
+}
+
+/* ---------------------------------------------------- */
+/* KAYDOL BUTONU İÇİN ÖZEL STİL */
+/* Bu, btn-success/btn-primary gibi sınıfları kullanırken turuncu tonu uygulamak içindir */
+/* ---------------------------------------------------- */
+
+.btn-kayit-turuncu {
+    background-color: #e95d2c !important; /* İstenen Rengi Uygula */
+    border-color: #e95d2c !important;
+    color: #ffffff !important;
+    transition: background-color 0.3s ease;
+}
+
+.btn-kayit-turuncu:hover {
+    background-color: #a63e1b !important; /* İstenen Hover Rengi */
+    border-color: #a63e1b !important;
+    color: #ffffff !important;
+}
+
+.alert-signing-success {
+    /* İstenen arka plan rengi */
+    background-color: #1b4d43 !important;
+    color: #ffffff !important;
+    border-color: #0b5345 !important;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.alert-signing-success .alert-heading {
+    color: #ffffff !important; /* Başlık için sarı vurgu */
+    font-weight: bold;
+}
+
+.alert-signing-success hr {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ---------------------------------------------------- */
+/* ANA SAYFAYA DÖN BUTONU (TURUNCU) */
+/* ---------------------------------------------------- */
+
+.btn-ana-sayfa-turuncu {
+    background-color: #e95d2c !important; 
+    border-color: #e95d2c !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-ana-sayfa-turuncu:hover {
+    background-color: #a63e1b !important; /* Hover Rengi */
+    border-color: #a63e1b !important;
+    color: #ffffff !important;
+}
+
+/* ---------------------------------------------------- */
+/* TÜM KURSLARI GÖRÜNTÜLE BUTONU (GRİ) */
+/* ---------------------------------------------------- */
+
+/* Bootstrap'in btn-secondary'sinin koyu temada düzgün görünmesini sağlama */
+.btn-goster-gri {
+    background-color: #62798b !important; /* Koyu temaya uyumlu dolgulu gri */
+    border-color: #4a5c6a !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-goster-gri:hover {
+    background-color: #384b5c !important; /* Hafif açılmış hover gri */
+    border-color: #637788 !important;
+    color: #ffffff !important;
+}
+
